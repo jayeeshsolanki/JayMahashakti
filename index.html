@@ -1,812 +1,1379 @@
-<!doctype html>
-<html lang="en" data-theme="royal">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="description" content="Om-AI-Master — autonomous farm & wealth console with multilingual voice control (Gujarati / Hindi / English), secure document vault and live agent telemetry." />
-<meta name="theme-color" content="#04060f" />
-<meta name="color-scheme" content="dark light" />
-<title>Om-AI-Master · Autonomous Console</title>
-<!-- inline data-URI favicon: prevents the /favicon.ico 404 on GitHub Pages -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a1024'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23fcd34d' font-family='sans-serif'%3E%E0%A5%90%3C/text%3E%3C/svg%3E" />
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a1024'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23fcd34d' font-family='sans-serif'%3E%E0%A5%90%3C/text%3E%3C/svg%3E" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Om-AI-Master | Autonomous Farm &amp; Wealth Dashboard</title>
 <style>
-/* ================= THEME TOKENS ================= */
-:root{
-  --bg:#04060f;
-  --glow:radial-gradient(circle at 20% 0%,rgba(37,99,235,.18),transparent 55%),radial-gradient(circle at 90% 100%,rgba(251,191,36,.10),transparent 50%);
-  --panel:rgba(8,12,28,.80); --panel2:rgba(255,255,255,.035);
-  --border:rgba(255,255,255,.09);
-  --accent:#fcd34d; --accent2:#3b82f6; --accentFg:#0a1024;
-  --accentSoft:rgba(252,211,77,.12); --accentBorder:rgba(252,211,77,.32);
-  --text:#e2e8f0; --muted:#94a3b8; --ok:#34d399; --bad:#fb7185;
-  --userBg:rgba(59,130,246,.15); --userBorder:rgba(96,165,250,.35);
-}
-[data-theme="emerald"]{
-  --bg:#03100c;
-  --glow:radial-gradient(circle at 15% 0%,rgba(16,185,129,.22),transparent 55%),radial-gradient(circle at 95% 100%,rgba(6,182,212,.14),transparent 50%);
-  --panel:rgba(4,24,19,.82); --border:rgba(52,211,153,.16);
-  --accent:#34d399; --accent2:#06b6d4; --accentFg:#032018;
-  --accentSoft:rgba(52,211,153,.12); --accentBorder:rgba(52,211,153,.35);
-  --text:#d1fae5; --muted:#7fa79b; --userBg:rgba(6,182,212,.16); --userBorder:rgba(34,211,238,.35);
-}
-[data-theme="light"]{
-  --bg:#f4f6fb;
-  --glow:radial-gradient(circle at 20% 0%,rgba(37,99,235,.12),transparent 55%),radial-gradient(circle at 90% 100%,rgba(217,119,6,.10),transparent 50%);
-  --panel:rgba(255,255,255,.92); --panel2:rgba(15,23,42,.04); --border:rgba(15,23,42,.12);
-  --accent:#b45309; --accent2:#2563eb; --accentFg:#fff;
-  --accentSoft:rgba(180,83,9,.10); --accentBorder:rgba(180,83,9,.30);
-  --text:#0f172a; --muted:#64748b; --ok:#047857;
-  --userBg:rgba(37,99,235,.12); --userBorder:rgba(37,99,235,.30);
-}
-[data-theme="cyber"]{
-  --bg:#0a0316;
-  --glow:radial-gradient(circle at 15% 0%,rgba(217,70,239,.25),transparent 55%),radial-gradient(circle at 95% 100%,rgba(34,211,238,.20),transparent 50%);
-  --panel:rgba(20,5,40,.82); --border:rgba(232,121,249,.20);
-  --accent:#f0abfc; --accent2:#22d3ee; --accentFg:#16021f;
-  --accentSoft:rgba(240,171,252,.12); --accentBorder:rgba(240,171,252,.40);
-  --text:#f5e8ff; --muted:#a78bbd; --ok:#4ade80;
-  --userBg:rgba(34,211,238,.16); --userBorder:rgba(34,211,238,.40);
-}
+  /* ============================================================
+     Om-AI-Master — fully self-contained styles.
+     No external fonts or assets: system font stack only, so the
+     page never depends on a network request to render correctly.
+     ============================================================ */
+  :root{
+    --font-display:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans Gujarati", "Noto Sans Devanagari", sans-serif;
+    --font-mono:"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --radius-sm:6px;
+    --radius-md:10px;
+    --radius-lg:16px;
+  }
 
-/* ================= BASE ================= */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  font-family:ui-sans-serif,system-ui,"Segoe UI","Noto Sans Gujarati","Noto Sans Devanagari",sans-serif;
-  background-color:var(--bg);background-image:var(--glow);color:var(--text);
-  overflow:hidden;transition:background-color .35s,color .35s;
-}
-button,input,select{font:inherit;color:inherit}
-button{background:none;border:none;cursor:pointer}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-thumb{background:var(--accentBorder);border-radius:9px}
-::placeholder{color:var(--muted);opacity:.7}
-.app{display:flex;height:100vh;width:100vw;overflow:hidden}
-.panel{background:var(--panel);backdrop-filter:blur(14px)}
-.p2{background:var(--panel2)}
-.acc{color:var(--accent)} .muted{color:var(--muted)} .ok{color:var(--ok)} .bad{color:var(--bad)}
-.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
-.soft{background:var(--accentSoft);border:1px solid var(--accentBorder);color:var(--accent)}
-.solid{background:var(--accent);color:var(--accentFg);border:1px solid var(--accent)}
-.row{display:flex;align-items:center}
-.hide{display:none !important}
-.tag{font-size:9px;letter-spacing:.22em;text-transform:uppercase}
+  html[data-theme="royal-gold"]{
+    --bg-0:#0b0d10; --bg-1:#12151a; --bg-2:#181c22; --bg-3:#20252c; --line:#2a2f38;
+    --text-0:#f2ede0; --text-1:#c9c2ac; --text-2:#8b8574;
+    --accent:#d4af37; --accent-2:#b8860b; --accent-soft:rgba(212,175,55,0.14);
+    --good:#4caf6f; --warn:#e0a638; --bad:#d1594a; --shadow:0 10px 30px rgba(0,0,0,0.45);
+  }
+  html[data-theme="emerald"]{
+    --bg-0:#07120d; --bg-1:#0c1a13; --bg-2:#112318; --bg-3:#172d1f; --line:#20402d;
+    --text-0:#e7f5ec; --text-1:#a9c9b6; --text-2:#6f9683;
+    --accent:#2ee6a6; --accent-2:#17b485; --accent-soft:rgba(46,230,166,0.14);
+    --good:#2ee6a6; --warn:#e0c23a; --bad:#e0645a; --shadow:0 10px 30px rgba(0,0,0,0.45);
+  }
+  html[data-theme="light"]{
+    --bg-0:#f4f2ec; --bg-1:#ffffff; --bg-2:#f1efe8; --bg-3:#e7e4d9; --line:#d9d5c8;
+    --text-0:#211f1a; --text-1:#4c493f; --text-2:#807a68;
+    --accent:#9a6b0c; --accent-2:#c68a12; --accent-soft:rgba(154,107,12,0.12);
+    --good:#2f8a55; --warn:#b3790f; --bad:#b3392b; --shadow:0 10px 24px rgba(60,50,20,0.12);
+  }
+  html[data-theme="cyberpunk"]{
+    --bg-0:#08060f; --bg-1:#0f0b1e; --bg-2:#150f28; --bg-3:#1c1533; --line:#3a2a5c;
+    --text-0:#f1eaff; --text-1:#c6b8ee; --text-2:#8b7ab8;
+    --accent:#ff2fd6; --accent-2:#2ff0ff; --accent-soft:rgba(255,47,214,0.16);
+    --good:#2ff0a6; --warn:#ffd23a; --bad:#ff4d6a; --shadow:0 0 30px rgba(255,47,214,0.18);
+  }
 
-/* ================= LEFT NAV ================= */
-.nav{width:216px;flex:0 0 auto;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 0;position:relative;transition:width .3s}
-.nav.collapsed{width:68px}
-.nav.collapsed .lbl,.nav.collapsed .navfoot span{display:none}
-.nav.collapsed .navbtn,.nav.collapsed .brand{justify-content:center;padding-left:0;padding-right:0}
-.brand{display:flex;align-items:center;gap:10px;padding:0 16px;margin-bottom:18px}
-.omk{width:38px;height:38px;flex:0 0 auto;display:grid;place-items:center;border-radius:11px;font-weight:800;font-size:17px}
-.navbtn{display:flex;align-items:center;gap:12px;width:calc(100% - 16px);margin:2px 8px;padding:10px 12px;border-radius:12px;font-size:13px;color:var(--muted);text-align:left;transition:.15s}
-.navbtn:hover{background:var(--accentSoft);color:var(--accent)}
-.navbtn.on{background:var(--accentSoft);border:1px solid var(--accentBorder);color:var(--accent)}
-.navfoot{margin-top:auto;padding:0 14px;font-size:10px;color:var(--muted)}
-.collapse{position:absolute;top:22px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;z-index:30;font-size:11px}
-.nav .collapse{right:-13px} .side .collapse{left:-13px}
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; font-family:var(--font-display); background:var(--bg-0); color:var(--text-0);
+    -webkit-font-smoothing:antialiased; overflow:hidden; transition:background 0.3s ease, color 0.3s ease;
+  }
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
-/* ================= CENTER ================= */
-.main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 18px;border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
-h1{font-size:13px;letter-spacing:.24em;font-weight:600}
-.sub{font-size:10px;letter-spacing:.14em;color:var(--accent)}
-.kpis{display:flex;gap:22px}
-.kpi p:first-child{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;text-align:right}
-.kpi p:last-child{font-size:13px;color:var(--accent);text-align:right}
-.pill{display:flex;border:1px solid var(--accentBorder);border-radius:99px;padding:2px}
-.pill button{padding:4px 9px;border-radius:99px;font-size:10px;font-weight:700;color:var(--muted)}
-.pill button.on{background:var(--accent);color:var(--accentFg)}
-.iconbtn{border-radius:99px;padding:6px 10px;font-size:10px;font-weight:700}
-.swatch{display:inline-flex}
-.swatch i{width:13px;height:13px;border-radius:50%;margin-left:-4px;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
-.swatch i:first-child{margin-left:0}
-.dropdown{position:absolute;top:44px;right:0;width:225px;border:1px solid var(--border);border-radius:14px;padding:7px;z-index:60;box-shadow:0 24px 60px rgba(0,0,0,.55)}
-.dropdown button{display:flex;align-items:center;gap:11px;width:100%;padding:8px 10px;border-radius:10px;font-size:12px;text-align:left;color:var(--text)}
-.dropdown button:hover{background:var(--accentSoft)}
-.dropdown button.on{background:var(--accentSoft);color:var(--accent)}
+  .app{display:grid; grid-template-columns:auto 1fr auto; height:100vh; width:100vw;}
 
-/* ---- chat ---- */
-.stream{flex:1 1 auto;min-height:0;overflow-y:auto;padding:22px 20px;display:flex;flex-direction:column;gap:14px}
-.wrap{width:100%;max-width:760px;margin:0 auto}
-.msg{display:flex}
-.msg.me{justify-content:flex-end}
-.bub{max-width:86%;border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:11px 15px;font-size:13.5px;line-height:1.55;white-space:pre-wrap}
-.msg.me .bub{background:var(--userBg);border-color:var(--userBorder)}
-.meta{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.24em;color:var(--accent);margin-bottom:5px}
-.vtag{background:var(--accentSoft);border-radius:99px;padding:1px 6px;font-size:8px;letter-spacing:.1em}
-.acts{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
-.acts button{display:flex;align-items:center;gap:5px;border-radius:9px;padding:4px 8px;font-size:10px;font-weight:600}
-.acts .loc{margin-left:auto;font-size:9px;letter-spacing:.18em;color:var(--muted)}
-.viewport{border:1px solid var(--accentBorder);border-radius:16px;padding:14px}
-.screenbox{height:170px;display:grid;place-items:center;border:1px solid var(--border);border-radius:12px;margin-top:12px;background:linear-gradient(120deg,var(--accentSoft),transparent);text-align:center;padding:0 14px}
-.spin{width:36px;height:36px;margin:0 auto 8px;border-radius:50%;border:2px solid var(--accentBorder);border-top-color:var(--accent);animation:sp 1s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
+  /* ---------- LEFT NAV ---------- */
+  .nav{
+    width:250px; background:var(--bg-1); border-right:1px solid var(--line);
+    display:flex; flex-direction:column; transition:width 0.25s ease; overflow:hidden; position:relative;
+  }
+  .nav.collapsed{width:72px;}
+  .nav-head{display:flex; align-items:center; gap:10px; padding:18px 16px; border-bottom:1px solid var(--line); min-height:64px;}
+  .nav-logo{
+    width:34px;height:34px;border-radius:9px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center; font-weight:800;color:var(--bg-0);font-size:15px;
+  }
+  .nav-title{font-weight:700;font-size:15px;white-space:nowrap;}
+  .nav-sub{font-size:11px;color:var(--text-2);white-space:nowrap;margin-top:1px;}
+  .nav.collapsed .nav-title, .nav.collapsed .nav-sub, .nav.collapsed .nav-label{display:none;}
+  .nav-toggle{
+    margin-left:auto; background:transparent;border:1px solid var(--line);color:var(--text-1);
+    width:28px;height:28px;border-radius:8px;cursor:pointer;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .nav.collapsed .nav-toggle{margin:0 auto;}
+  .nav-toggle:hover{border-color:var(--accent);color:var(--accent);}
+  .nav-section{padding:14px 12px 4px;}
+  .nav-section-label{font-size:10.5px;letter-spacing:.04em;color:var(--text-2);padding:0 8px 6px;}
+  .nav-item{
+    display:flex;align-items:center;gap:12px; padding:10px 12px;border-radius:var(--radius-md);
+    color:var(--text-1);cursor:pointer;font-size:13.5px;font-weight:500;
+    border:1px solid transparent;margin-bottom:2px;white-space:nowrap;
+  }
+  .nav-item svg{flex-shrink:0;width:18px;height:18px;}
+  .nav-item:hover{background:var(--bg-2);color:var(--text-0);}
+  .nav-item.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+  .nav-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--line);}
+  .theme-row{display:flex;gap:6px;padding:0 8px 10px;flex-wrap:wrap;}
+  .nav.collapsed .theme-row{flex-direction:column;padding:0;align-items:center;}
+  .theme-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex-shrink:0;}
+  .theme-dot.active{border-color:var(--text-0);}
+  .theme-dot[data-t="royal-gold"]{background:linear-gradient(135deg,#d4af37,#3a2c05);}
+  .theme-dot[data-t="emerald"]{background:linear-gradient(135deg,#2ee6a6,#0c2717);}
+  .theme-dot[data-t="light"]{background:linear-gradient(135deg,#fff,#c68a12);}
+  .theme-dot[data-t="cyberpunk"]{background:linear-gradient(135deg,#ff2fd6,#2ff0ff);}
+  .mode-toggle{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-md);
+    padding:8px 10px;margin-bottom:10px;font-size:12px;color:var(--text-1);
+  }
+  .switch{
+    position:relative;width:38px;height:20px;background:var(--bg-3);border-radius:20px;border:1px solid var(--line);cursor:pointer;flex-shrink:0;
+  }
+  .switch .knob{
+    position:absolute;top:1px;left:1px;width:16px;height:16px;border-radius:50%;background:var(--accent);
+    transition:left .2s ease;
+  }
+  .switch.on .knob{left:19px;}
+  .lang-select{
+    width:100%;background:var(--bg-2);border:1px solid var(--line);color:var(--text-0);
+    padding:8px 10px;border-radius:var(--radius-sm);font-size:12.5px;margin-top:4px;
+  }
 
-/* ---- chatbar ---- */
-.dock{border-top:1px solid var(--border);padding:14px 20px}
-.bar{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:16px;padding:8px;position:relative}
-.bar input.txt{flex:1 1 auto;min-width:0;background:none;border:none;outline:none;font-size:13.5px;padding:0 6px}
-.circ{width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;border-radius:12px;font-size:17px;transition:.2s}
-.circ.rot{transform:rotate(45deg)}
-.mic{display:flex;align-items:center;gap:7px;height:40px;padding:0 12px;border-radius:12px;font-size:12px;font-weight:700;position:relative;overflow:hidden}
-.mic.live::after{content:"";position:absolute;inset:0;background:var(--accentSoft);animation:pulse 1.2s ease-out infinite}
-@keyframes pulse{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.4)}}
-.langsel{border:1px solid var(--border);background:var(--panel);border-radius:9px;padding:6px 6px;font-size:11px;outline:none}
-.hint{position:absolute;top:-32px;left:50%;transform:translateX(-50%);max-width:96%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:99px;padding:4px 14px;font-size:11px}
-.plusmenu{position:absolute;bottom:70px;left:0;width:336px;border:1px solid var(--accentBorder);border-radius:16px;padding:10px;z-index:50;box-shadow:0 24px 70px rgba(0,0,0,.6)}
-.plusmenu .item{display:flex;align-items:center;gap:11px;width:100%;padding:9px 10px;border-radius:12px;text-align:left;color:var(--text)}
-.plusmenu .item:hover{background:var(--accentSoft)}
-.ico{width:36px;height:36px;flex:0 0 auto;display:grid;place-items:center;border-radius:10px;font-size:15px}
-.urlbox{border:1px solid var(--border);border-radius:12px;padding:10px;margin-top:8px}
-.urlbox input{width:100%;background:var(--panel2);border:none;border-radius:8px;padding:6px 9px;font-size:11.5px;outline:none}
-.disc{text-align:center;font-size:10px;color:var(--muted);margin-top:8px}
+  /* ---------- CENTER CHAT ---------- */
+  .chat-col{display:flex;flex-direction:column;min-width:0;background:var(--bg-0);}
+  .chat-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;border-bottom:1px solid var(--line);background:var(--bg-1);
+  }
+  .chat-header h1{font-size:16px;margin:0;font-weight:700;}
+  .status-pill{
+    font-size:11px;color:var(--good);background:rgba(76,175,111,0.12);
+    padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);
+  }
+  .status-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 6px var(--good);}
+  .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
+  .msg{max-width:72%;display:flex;flex-direction:column;gap:6px;}
+  .msg.user{align-self:flex-end;align-items:flex-end;}
+  .msg.ai{align-self:flex-start;align-items:flex-start;}
+  .bubble{padding:12px 16px;border-radius:var(--radius-lg);font-size:14px;line-height:1.55;word-wrap:break-word;}
+  .msg.user .bubble{background:var(--accent);color:var(--bg-0);border-bottom-right-radius:4px;font-weight:500;}
+  .msg.ai .bubble{background:var(--bg-2);border:1px solid var(--line);border-bottom-left-radius:4px;}
+  .msg-meta{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--text-2);font-family:var(--font-mono);}
+  .icon-btn{
+    background:var(--bg-2);border:1px solid var(--line);color:var(--text-1);
+    width:26px;height:26px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .icon-btn.speaking{color:var(--accent);border-color:var(--accent);animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 var(--accent-soft);}50%{box-shadow:0 0 0 6px transparent;}}
+  .typing{display:flex;gap:4px;padding:12px 16px;}
+  .typing span{width:6px;height:6px;border-radius:50%;background:var(--text-2);animation:blink 1.2s infinite ease-in-out;}
+  .typing span:nth-child(2){animation-delay:.2s;}
+  .typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.2;}40%{opacity:1;}}
+  .composer{border-top:1px solid var(--line);background:var(--bg-1);padding:14px 20px 18px;}
+  .composer-row{
+    display:flex;align-items:flex-end;gap:10px;background:var(--bg-2);
+    border:1px solid var(--line);border-radius:var(--radius-lg);padding:8px 8px 8px 16px;
+  }
+  .composer-row textarea{
+    flex:1;resize:none;background:transparent;border:none;color:var(--text-0);
+    font-family:inherit;font-size:14px;line-height:1.5;max-height:120px;padding:6px 0;
+  }
+  .composer-row textarea:focus{outline:none;}
+  .composer-actions{display:flex;gap:6px;align-items:center;}
+  .round-btn{
+    width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg-3);
+    color:var(--text-1);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .round-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .round-btn.primary{background:var(--accent);color:var(--bg-0);border-color:var(--accent);}
+  .round-btn.primary:hover{opacity:.9;}
+  .round-btn.mic.listening{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1s infinite;}
+  .round-btn.mic.unsupported{opacity:.45;cursor:not-allowed;}
+  .composer-hint{font-size:11px;color:var(--text-2);margin-top:8px;padding-left:4px;font-family:var(--font-mono);}
 
-/* ================= RIGHT TELEMETRY ================= */
-.side{width:332px;flex:0 0 auto;border-left:1px solid var(--border);position:relative;transition:width .3s;display:flex;flex-direction:column}
-.side.collapsed{width:62px}
-.side.collapsed .sfull{display:none}
-.srail{display:none;flex-direction:column;align-items:center;gap:14px;padding-top:74px}
-.side.collapsed .srail{display:flex}
-.shead{padding:14px 18px;border-bottom:1px solid var(--border)}
-.slist{flex:1 1 auto;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px}
-.card{border:1px solid var(--border);background:var(--panel2);border-radius:13px;padding:11px;text-align:left;width:100%;transition:.15s}
-.card:hover{border-color:var(--accentBorder);background:var(--accentSoft)}
-.track{height:6px;border-radius:99px;background:var(--panel2);overflow:hidden;flex:1 1 auto}
-.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .7s}
-.chip{border:1px solid var(--accentBorder);background:var(--accentSoft);color:var(--accent);border-radius:99px;padding:2px 7px;font-size:9px;font-weight:800;letter-spacing:.1em}
-.sfoot{border-top:1px solid var(--border);padding:10px 18px;font-size:10px;color:var(--accent)}
-.toggle{width:38px;height:20px;border-radius:99px;position:relative;border:1px solid var(--border);transition:.2s}
-.toggle.on{background:var(--accent);border-color:var(--accent)}
-.toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
-.toggle.on i{left:20px}
+  /* ---------- RIGHT TELEMETRY SIDEBAR ---------- */
+  .telemetry{
+    width:340px;background:var(--bg-1);border-left:1px solid var(--line);
+    overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px;
+  }
+  .panel{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;}
+  .panel-title{
+    font-size:12px;font-weight:700;color:var(--text-1);margin:0 0 12px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel-title small{font-size:10px;color:var(--text-2);font-weight:500;font-family:var(--font-mono);}
+  .wealth-big{font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--accent);}
+  .wealth-sub{font-size:11.5px;color:var(--text-2);margin-top:2px;}
+  .wealth-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+  .wealth-stat{background:var(--bg-1);border:1px solid var(--line);border-radius:var(--radius-md);padding:10px;}
+  .wealth-stat .v{font-family:var(--font-mono);font-weight:700;font-size:14px;}
+  .wealth-stat .l{font-size:10.5px;color:var(--text-2);margin-top:2px;}
+  .payout-btn{
+    width:100%;margin-top:14px;padding:10px;border-radius:var(--radius-md);border:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--bg-0);
+    font-weight:700;font-size:12.5px;cursor:pointer;
+  }
+  .payout-btn:hover{opacity:.92;}
+  .payout-log{max-height:90px;overflow-y:auto;margin-top:10px;font-size:11px;color:var(--text-2);font-family:var(--font-mono);}
+  .payout-log div{padding:3px 0;border-bottom:1px dashed var(--line);}
+  .agent-card{
+    display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-md);
+    background:var(--bg-1);border:1px solid var(--line);margin-bottom:8px;
+  }
+  .agent-card:last-child{margin-bottom:0;}
+  .agent-icon{
+    width:36px;height:36px;border-radius:9px;background:var(--bg-3);display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;font-size:16px;
+  }
+  .agent-info{flex:1;min-width:0;}
+  .agent-name{font-size:12.5px;font-weight:600;}
+  .agent-id{font-size:10px;color:var(--text-2);font-family:var(--font-mono);}
+  .agent-bar-track{height:4px;background:var(--bg-3);border-radius:4px;margin-top:6px;overflow:hidden;}
+  .agent-bar-fill{height:100%;border-radius:4px;background:var(--good);transition:width .6s ease;}
+  .agent-badge{
+    font-size:9.5px;font-family:var(--font-mono);padding:3px 7px;border-radius:20px;white-space:nowrap;
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  .agent-badge.active{background:rgba(76,175,111,0.15);color:var(--good);}
+  .agent-badge.idle{background:rgba(224,166,56,0.15);color:var(--warn);}
+  .agent-badge.alert{background:rgba(209,89,74,0.15);color:var(--bad);}
 
-/* ================= MODALS ================= */
-.scrim{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;z-index:100}
-.modal{width:100%;max-width:660px;border:1px solid var(--accentBorder);border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.7)}
-.mhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 22px;border-bottom:1px solid var(--border)}
-.mbody{max-height:70vh;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.cell{border:1px solid var(--border);background:var(--panel2);border-radius:10px;padding:10px}
-.logline{display:flex;gap:10px;border:1px solid var(--border);background:var(--panel2);border-radius:10px;padding:7px 11px;font-size:11px}
-.drop{border:1px dashed var(--accentBorder);border-radius:14px;padding:22px;text-align:center;cursor:pointer}
-.drop:hover{background:var(--accentSoft)}
-.docrow{display:flex;align-items:center;gap:11px;border:1px solid var(--border);background:var(--panel2);border-radius:12px;padding:9px 11px}
-.kind{width:38px;height:38px;flex:0 0 auto;display:grid;place-items:center;border-radius:9px;font-size:9px;font-weight:800}
-.toastwrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center}
-.toast{border-radius:99px;padding:8px 18px;font-size:12px;font-weight:600;box-shadow:0 14px 40px rgba(0,0,0,.5);animation:up .25s ease-out}
-@keyframes up{from{opacity:0;transform:translateY(10px)}}
+  /* ---------- VAULT ---------- */
+  .vault-tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .vault-tab{
+    flex:1;text-align:center;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--line);
+    background:var(--bg-1);color:var(--text-1);font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .vault-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+  .vault-form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .vault-form input{
+    background:var(--bg-1);border:1px solid var(--line);color:var(--text-0);
+    padding:8px 10px;border-radius:var(--radius-sm);font-size:12.5px;
+  }
+  .vault-form button{
+    background:var(--accent);border:none;color:var(--bg-0);font-weight:700;font-size:12px;
+    padding:9px;border-radius:var(--radius-sm);cursor:pointer;
+  }
+  .vault-item{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 12px;
+    margin-bottom:8px;
+  }
+  .vault-item-head{display:flex;justify-content:space-between;align-items:center;}
+  .vault-item-head .t{font-size:12px;font-weight:600;}
+  .vault-redacted{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em;margin-top:6px;color:var(--text-1);}
+  .vault-item-actions{display:flex;gap:6px;margin-top:8px;}
+  .mini-btn{
+    background:var(--bg-2);border:1px solid var(--line);color:var(--text-1);font-size:10.5px;
+    padding:5px 9px;border-radius:6px;cursor:pointer;
+  }
+  .mini-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .mini-btn.danger:hover{border-color:var(--bad);color:var(--bad);}
+  .vault-note{font-size:10px;color:var(--text-2);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+  .empty-note{font-size:11.5px;color:var(--text-2);text-align:center;padding:14px 0;}
 
-/* ================= RESPONSIVE ================= */
-@media (max-width:1180px){.kpis{display:none}}
-@media (max-width:900px){.nav{display:none}.side{width:280px}.side.collapsed{width:54px}}
-@media (max-width:640px){
-  .side{position:fixed;right:0;top:0;bottom:0;z-index:80;width:300px;box-shadow:-20px 0 60px rgba(0,0,0,.6);transform:translateX(0);transition:transform .3s}
-  .side.collapsed{width:300px;transform:translateX(100%)}
-  .side .collapse{left:-14px}
-  .side.collapsed .sfull{display:flex}
-  .side.collapsed .srail{display:none}
-  .fab{display:grid !important}
-  .grid3{grid-template-columns:repeat(2,1fr)}
-  .mic span:last-child,.acts button span{display:none}
-  .langsel{display:none}
-  .stream{padding:16px 12px}
-  .dock{padding:10px 12px}
-  .modal{max-height:92vh}
-}
-/* floating telemetry launcher (mobile only) */
-.fab{display:none;position:fixed;right:14px;bottom:78px;width:46px;height:46px;border-radius:50%;place-items:center;font-size:18px;z-index:70;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .view{display:none;flex:1;overflow-y:auto;padding:24px;}
+  .view.active{display:block;}
+  .view h2{margin-top:0;font-size:18px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;}
+  .card h3{margin:0 0 10px;font-size:13.5px;color:var(--text-1);}
+  .kpi{font-size:26px;font-weight:800;font-family:var(--font-mono);color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);}
+  th{color:var(--text-2);font-weight:600;font-size:11px;}
+
+  /* ---------- TOAST ---------- */
+  .toast-stack{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+    display:flex;flex-direction:column;gap:8px;z-index:200;pointer-events:none;align-items:center;
+  }
+  .toast{
+    background:var(--bg-2);border:1px solid var(--line);color:var(--text-0);
+    padding:10px 16px;border-radius:var(--radius-md);font-size:12.5px;box-shadow:var(--shadow);
+    opacity:0;transform:translateY(8px);transition:opacity .25s ease, transform .25s ease;
+    max-width:420px;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast.warn{border-color:var(--warn);color:var(--warn);}
+  .toast.error{border-color:var(--bad);color:var(--bad);}
+
+  @media (max-width:980px){
+    .telemetry{position:fixed;right:0;top:0;bottom:0;z-index:20;box-shadow:var(--shadow);width:300px;}
+    .nav{position:fixed;left:0;top:0;bottom:0;z-index:20;box-shadow:var(--shadow);}
+    .app{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
-<div class="app">
+<noscript>
+  <div style="padding:40px;font-family:sans-serif;color:#eee;background:#111;">
+    Om-AI-Master requires JavaScript to run. Please enable JavaScript in your browser settings.
+  </div>
+</noscript>
 
-  <!-- ============ LEFT NAV ============ -->
-  <nav class="nav panel" id="nav">
-    <button class="collapse soft" onclick="toggleNav()" id="navChev">‹</button>
-    <div class="brand"><div class="omk soft">ॐ</div><span class="lbl" style="font-size:11px;letter-spacing:.2em;font-weight:700">OM-AI-MASTER</span></div>
-    <div id="navList"></div>
-    <div class="navfoot"><span>Om-AI-Master v5.0 · secure mesh</span></div>
-  </nav>
+<div class="app" id="appRoot">
 
-  <!-- ============ CENTER CONSOLE ============ -->
-  <div class="main">
-    <header>
-      <div class="row" style="gap:11px">
-        <div class="omk soft">ॐ</div>
-        <div><h1>OM-AI-MASTER</h1><p class="sub" id="hdrSub"></p></div>
+  <!-- ================= LEFT NAVIGATION ================= -->
+  <aside class="nav" id="navSidebar">
+    <div class="nav-head">
+      <div class="nav-logo">OM</div>
+      <div>
+        <div class="nav-title">Om-AI-Master</div>
+        <div class="nav-sub">Farm &amp; Wealth OS</div>
       </div>
-      <div class="kpis" id="kpis"></div>
-      <div class="row" style="gap:8px">
-        <button class="iconbtn soft" onclick="openVault()" title="Vault">🔐 <span id="docCount">3</span></button>
-        <div style="position:relative">
-          <button class="iconbtn soft row" style="gap:7px" onclick="toggleThemeMenu(event)">
-            <span class="swatch" id="themeSwatch"></span><span id="themeLbl">Theme</span>
-          </button>
-          <div class="dropdown panel hide" id="themeMenu"></div>
-        </div>
-        <div class="pill" id="langPill"></div>
+      <button class="nav-toggle" id="navToggle" title="Collapse sidebar" aria-label="Toggle navigation">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">MAIN</div>
+      <div class="nav-item active" data-view="chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span class="nav-label">Chat Console</span>
       </div>
-    </header>
-
-    <div class="stream" id="stream"></div>
-
-    <div class="dock">
-      <div class="wrap" style="position:relative">
-        <div class="plusmenu panel hide" id="plusMenu"></div>
-        <div class="hint soft hide" id="voiceHint"></div>
-        <div class="bar panel">
-          <button class="circ soft" id="plusBtn" onclick="togglePlus(event)">＋</button>
-          <select class="langsel" id="langSel" onchange="setLang(this.value)"></select>
-          <input class="txt" id="input" onkeydown="if(event.key==='Enter')sendText()" />
-          <button class="circ" id="sendBtn" onclick="sendText()" style="background:var(--accent2);color:#fff">➤</button>
-          <button class="mic soft" id="micBtn" onclick="toggleVoice()"><span style="position:relative">🎙</span><span id="micLbl">Voice</span></button>
-        </div>
-        <p class="disc" id="disc"></p>
+      <div class="nav-item" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span class="nav-label">Farm Dashboard</span>
+      </div>
+      <div class="nav-item" data-view="wealth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="nav-label">Wealth Ledger</span>
+      </div>
+      <div class="nav-item" data-view="vault">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span class="nav-label">Document Vault</span>
+      </div>
+      <div class="nav-item" data-view="agents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4M8 4h8"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></svg>
+        <span class="nav-label">Agent Control</span>
       </div>
     </div>
-  </div>
 
-  <!-- ============ RIGHT TELEMETRY ============ -->
-  <aside class="side panel" id="side">
-    <button class="collapse soft" onclick="toggleSide()" id="sideChev">›</button>
-    <div class="srail" id="srail"></div>
-    <div class="sfull" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
-      <div class="shead">
-        <p class="acc tag" id="telLbl">Live Telemetry</p>
-        <h2 style="font-size:13px;margin-top:3px" id="gridLbl">Om-AI-Master · Agent Grid</h2>
-        <p class="muted" style="font-size:11px;margin-top:2px">4 units · mesh latency 38 ms</p>
+    <div class="nav-footer">
+      <div class="nav-section-label">APPEARANCE</div>
+      <div class="mode-toggle">
+        <span id="modeLabel">Dark mode</span>
+        <div class="switch on" id="modeSwitch" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div>
       </div>
-      <div class="slist">
-        <!-- wealth widget -->
-        <div class="card" style="cursor:default">
-          <p class="acc tag">💰 <span id="wealthLbl">Wealth &amp; Payouts</span></p>
-          <p class="muted" style="font-size:10px;margin-top:7px" id="earnLbl">Accumulated earnings</p>
-          <p class="acc mono" style="font-size:21px" id="balance">₹0</p>
-          <p class="ok" style="font-size:10px" id="availLbl">Available · +₹412/hr autonomous yield</p>
-          <p class="muted tag" style="margin-top:10px" id="routeLbl">Payout route</p>
-          <select class="langsel" id="routeSel" style="width:100%;margin-top:4px" onchange="renderRoute()"></select>
-          <p class="muted" style="font-size:10px;margin-top:4px" id="routeMeta"></p>
-          <button class="solid" style="width:100%;margin-top:11px;border-radius:9px;padding:8px;font-size:12px;font-weight:700" onclick="withdrawAll()" id="wdBtn">Withdraw now →</button>
-          <div class="row" style="justify-content:space-between;margin-top:11px;font-size:11px">
-            <span class="muted" id="autoLbl">Autonomous payout</span>
-            <button class="toggle on" id="autoTog" onclick="this.classList.toggle('on')"><i></i></button>
-          </div>
-          <div id="payoutLog" style="margin-top:9px;display:flex;flex-direction:column;gap:4px"></div>
-        </div>
-        <div id="agentList" style="display:flex;flex-direction:column;gap:11px"></div>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-dot" data-t="royal-gold" title="Royal Dark Gold"></button>
+        <button class="theme-dot" data-t="emerald" title="Emerald Green"></button>
+        <button class="theme-dot" data-t="cyberpunk" title="Cyberpunk Neon"></button>
+        <button class="theme-dot" data-t="light" title="Clean Light Mode"></button>
       </div>
-      <div class="sfoot">⚡ Grid draw 12.4 kW · solar 78%</div>
+      <div class="nav-section-label">VOICE LANGUAGE</div>
+      <select class="lang-select" id="langSelect">
+        <option value="en-US">English (US)</option>
+        <option value="hi-IN">हिन्दी (Hindi)</option>
+        <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+      </select>
     </div>
   </aside>
+
+  <!-- ================= CENTER: CHAT ================= -->
+  <main class="chat-col">
+
+    <!-- CHAT VIEW -->
+    <div class="view active" id="view-chat" style="display:flex;flex-direction:column;flex:1;padding:0;">
+      <div class="chat-header">
+        <div><h1>Om-AI-Master Console</h1></div>
+        <div class="status-pill"><span class="dot"></span> ALL SYSTEMS NOMINAL</div>
+      </div>
+
+      <div class="messages" id="messages"></div>
+
+      <div class="composer">
+        <div class="composer-row">
+          <textarea id="chatInput" rows="1" placeholder="Ask Om-AI-Master about your farm, agents, or wealth... (Gujarati / Hindi / English)"></textarea>
+          <div class="composer-actions">
+            <button class="round-btn mic" id="micBtn" title="Voice input">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+            </button>
+            <button class="round-btn" id="camBtn" title="Attach media (simulated)">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </button>
+            <button class="round-btn primary" id="sendBtn" title="Send">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="composer-hint" id="composerHint">Enter to send · Shift+Enter for new line · Mic uses your selected voice language</div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="view" id="view-dashboard">
+      <h2>Farm Dashboard</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Today's Yield</h3><div class="kpi" id="dashYield">0 kg</div></div>
+        <div class="card"><h3>Active Agents</h3><div class="kpi" id="dashAgents">0 / 3</div></div>
+        <div class="card"><h3>Soil Moisture (avg)</h3><div class="kpi" id="dashMoisture">--%</div></div>
+        <div class="card"><h3>Net Wealth</h3><div class="kpi" id="dashWealth">₹0</div></div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3>Recent Field Events</h3>
+        <table>
+          <thead><tr><th>Time</th><th>Agent</th><th>Event</th></tr></thead>
+          <tbody id="eventLog"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WEALTH VIEW -->
+    <div class="view" id="view-wealth">
+      <h2>Wealth Ledger</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Total Net Wealth</h3><div class="kpi" id="ledgerWealth">₹0</div></div>
+        <div class="card"><h3>Total Payouts (session)</h3><div class="kpi" id="ledgerPayouts">₹0</div></div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3>Transaction History</h3>
+        <table>
+          <thead><tr><th>Time</th><th>Type</th><th>Amount</th></tr></thead>
+          <tbody id="txnLog"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VAULT VIEW -->
+    <div class="view" id="view-vault">
+      <h2>Secure Document Vault</h2>
+      <div class="card" style="max-width:520px;">
+        <div class="vault-tabs" id="vaultTabsMain">
+          <div class="vault-tab active" data-doctype="Aadhaar">Aadhaar</div>
+          <div class="vault-tab" data-doctype="PAN">PAN</div>
+        </div>
+        <div class="vault-form">
+          <input type="text" id="vaultNumMain" placeholder="Enter document number">
+          <button id="vaultAddMain">Save to Vault</button>
+        </div>
+        <div id="vaultListMain"></div>
+        <div class="vault-note">Documents are redacted by default and stored only in this browser's local storage. Nothing is transmitted to any server. This is a demo-grade simulation, not a certified secure storage system — do not rely on it for real identity documents.</div>
+      </div>
+    </div>
+
+    <!-- AGENTS VIEW -->
+    <div class="view" id="view-agents">
+      <h2>Agent Control Center</h2>
+      <div id="agentListMain"></div>
+    </div>
+
+  </main>
+
+  <!-- ================= RIGHT TELEMETRY ================= -->
+  <aside class="telemetry" id="telemetrySidebar">
+
+    <div class="panel">
+      <div class="panel-title">Wealth Metrics <small>LIVE</small></div>
+      <div class="wealth-big" id="wealthTotal">₹0</div>
+      <div class="wealth-sub">Total accumulated farm wealth</div>
+      <div class="wealth-grid">
+        <div class="wealth-stat"><div class="v" id="statYieldToday">0 kg</div><div class="l">Yield Today</div></div>
+        <div class="wealth-stat"><div class="v" id="statPrice">₹0/kg</div><div class="l">Market Price</div></div>
+        <div class="wealth-stat"><div class="v" id="statRevenue">₹0</div><div class="l">Est. Revenue</div></div>
+        <div class="wealth-stat"><div class="v" id="statCost">₹0</div><div class="l">Op. Cost</div></div>
+      </div>
+      <button class="payout-btn" id="triggerPayout">Trigger Automated Payout</button>
+      <div class="payout-log" id="payoutLog"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Agent Telemetry <small id="agentClock">--:--:--</small></div>
+      <div id="agentList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Document Vault <small>REDACTED</small></div>
+      <div class="vault-tabs" id="vaultTabsSide">
+        <div class="vault-tab active" data-doctype="Aadhaar">Aadhaar</div>
+        <div class="vault-tab" data-doctype="PAN">PAN</div>
+      </div>
+      <div class="vault-form">
+        <input type="text" id="vaultNum" placeholder="Enter document number">
+        <button id="vaultAdd">Save to Vault</button>
+      </div>
+      <div id="vaultList"></div>
+    </div>
+
+  </aside>
+
 </div>
 
-<button class="fab solid" onclick="toggleSide()" title="Telemetry">📡</button>
-<div id="modalHost"></div>
-<div class="toastwrap" id="toasts"></div>
-<noscript><p style="padding:24px;text-align:center">Om-AI-Master requires JavaScript to run.</p></noscript>
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
 <script>
-/* =====================================================================
-   OM-AI-MASTER — single-file autonomous console
-   Sections: i18n · themes · data · speech · render · actions
-   ===================================================================== */
+/* ==================================================================
+   Om-AI-Master — production script.
+   The entire app boot sequence is wrapped in try/catch blocks and a
+   global error handler so that a single failing feature (e.g. speech
+   APIs unsupported, storage blocked) degrades gracefully instead of
+   breaking the rest of the dashboard or leaving a blank page.
+   ================================================================== */
 
-/* ---------------- i18n ---------------- */
-var LANGS=[{code:"gu-IN",native:"ગુજરાતી",short:"GU",label:"Gujarati"},
-           {code:"hi-IN",native:"हिन्दी",short:"HI",label:"Hindi"},
-           {code:"en-IN",native:"English",short:"EN",label:"English"}];
-
-var T={
- subtitle:{"gu-IN":"ઓમ-એઆઈ-માસ્ટર · સ્વાયત્ત કામગીરી · નોડ ૦૭","hi-IN":"ओम-एआई-मास्टर · स्वायत्त संचालन · नोड ०७","en-IN":"OM-AI-MASTER · AUTONOMOUS OPERATIONS · NODE 07"},
- placeholder:{"gu-IN":"આદેશ લખો… દા.ત. “ઉપાડ કરો” અથવા “દસ્તાવેજ બતાવો”","hi-IN":"आदेश लिखें… जैसे “पैसा निकालो” या “दस्तावेज़ दिखाओ”","en-IN":"Command Om-AI-Master… e.g. “withdraw” or “open vault”"},
- voice:{"gu-IN":"અવાજ","hi-IN":"आवाज़","en-IN":"Voice"},
- listening:{"gu-IN":"સાંભળી રહ્યું છે…","hi-IN":"सुन रहा है…","en-IN":"Listening…"},
- operator:{"gu-IN":"સંચાલક","hi-IN":"संचालक","en-IN":"OPERATOR"},
- modules:{"gu-IN":"ઇનપુટ મોડ્યુલ","hi-IN":"इनपुट मॉड्यूल","en-IN":"INPUT MODULES"},
- camera:{"gu-IN":"કેમેરા કેપ્ચર","hi-IN":"कैमरा कैप्चर","en-IN":"Camera Capture"},
- video:{"gu-IN":"વિડિયો મોડ","hi-IN":"वीडियो मोड","en-IN":"Video Mode"},
- screen:{"gu-IN":"સ્ક્રીન શેર","hi-IN":"स्क्रीन शेयर","en-IN":"Screen Share"},
- urlBox:{"gu-IN":"લિંક / મૂવી વિશ્લેષણ","hi-IN":"लिंक / मूवी विश्लेषण","en-IN":"URL / Movie analysis"},
- urlPh:{"gu-IN":"વિશ્લેષણ માટે લિંક પેસ્ટ કરો…","hi-IN":"विश्लेषण हेतु लिंक पेस्ट करें…","en-IN":"Paste link to analyze…"},
- scan:{"gu-IN":"સ્કેન","hi-IN":"स्कैन","en-IN":"Scan"},
- telemetry:{"gu-IN":"લાઇવ ટેલિમેટ્રી","hi-IN":"लाइव टेलीमेट्री","en-IN":"LIVE TELEMETRY"},
- grid:{"gu-IN":"ઓમ-એઆઈ-માસ્ટર · એજન્ટ ગ્રીડ","hi-IN":"ओम-एआई-मास्टर · एजेंट ग्रिड","en-IN":"Om-AI-Master · Agent Grid"},
- drill:{"gu-IN":"વિગત →","hi-IN":"विवरण →","en-IN":"drill down →"},
- ahead:{"gu-IN":"મિનિટ આગળ","hi-IN":"मिनट आगे","en-IN":"min ahead"},
- behind:{"gu-IN":"મિનિટ પાછળ","hi-IN":"मिनट पीछे","en-IN":"min behind"},
- welcome:{"gu-IN":"ઓમ-એઆઈ-માસ્ટર કન્સોલ ચાલુ છે. ચારે સ્વાયત્ત યુનિટ જોડાયેલા છે. વૉલ્ટમાં આધાર અને પાન સુરક્ષિત છે. હું શું કરું?","hi-IN":"ओम-एआई-मास्टर कंसोल सक्रिय है। चारों स्वायत्त इकाइयाँ जुड़ी हैं। वॉल्ट में आधार और पैन सुरक्षित हैं। मैं क्या करूँ?","en-IN":"Om-AI-Master console online. Four autonomous units synced. Aadhaar and PAN secured in the vault. How shall we proceed?"},
- task:{"gu-IN":"વર્તમાન કાર્ય","hi-IN":"वर्तमान कार्य","en-IN":"CURRENT TASK"},
- metrics:{"gu-IN":"ઊંડા માપદંડ","hi-IN":"गहरे मापदंड","en-IN":"DEEP METRICS"},
- events:{"gu-IN":"ઘટના પ્રવાહ","hi-IN":"इवेंट स्ट्रीम","en-IN":"EVENT STREAM"},
- disc:{"gu-IN":"ઓમ-એઆઈ-માસ્ટર મંજૂર મર્યાદામાં સ્વાયત્ત રીતે કાર્ય કરી શકે છે.","hi-IN":"ओम-एआई-मास्टर स्वीकृत सीमाओं में स्वायत्त रूप से कार्य कर सकता है।","en-IN":"Om-AI-Master may act autonomously within approved operating envelopes."},
- unsupported:{"gu-IN":"આ બ્રાઉઝરમાં વૉઇસ ઓળખ ઉપલબ્ધ નથી.","hi-IN":"इस ब्राउज़र में वॉइस पहचान उपलब्ध नहीं है।","en-IN":"Speech recognition is unavailable in this browser."},
- vault:{"gu-IN":"સુરક્ષિત દસ્તાવેજ વૉલ્ટ","hi-IN":"सुरक्षित दस्तावेज़ वॉल्ट","en-IN":"Secure Document Vault"},
- vaultHint:{"gu-IN":"આધાર, પાન, PDF અપલોડ કરો — એજન્ટ સુરક્ષિત રીતે ઉપયોગ કરશે.","hi-IN":"आधार, पैन, PDF अपलोड करें — एजेंट सुरक्षित रूप से उपयोग करेंगे।","en-IN":"Upload Aadhaar, PAN, PDFs — agents reference them securely."},
- upload:{"gu-IN":"અપલોડ કરો","hi-IN":"अपलोड करें","en-IN":"Upload"},
- wealth:{"gu-IN":"સંપત્તિ અને ચુકવણી","hi-IN":"संपत्ति और भुगतान","en-IN":"Wealth & Payouts"},
- earnings:{"gu-IN":"કુલ કમાણી","hi-IN":"कुल कमाई","en-IN":"Accumulated earnings"},
- avail:{"gu-IN":"ઉપાડ યોગ્ય · +₹૪૧૨/કલાક","hi-IN":"निकासी योग्य · +₹412/घंटा","en-IN":"Available · +₹412/hr autonomous yield"},
- withdraw:{"gu-IN":"ઉપાડ કરો →","hi-IN":"निकासी करें →","en-IN":"Withdraw now →"},
- auto:{"gu-IN":"સ્વચાલિત ચુકવણી","hi-IN":"स्वचालित भुगतान","en-IN":"Autonomous payout"},
- route:{"gu-IN":"ચુકવણી માર્ગ","hi-IN":"भुगतान मार्ग","en-IN":"Payout route"},
- theme:{"gu-IN":"થીમ","hi-IN":"थीम","en-IN":"Theme"},
- speak:{"gu-IN":"સાંભળો","hi-IN":"सुनें","en-IN":"Speak"},
- stop:{"gu-IN":"બંધ","hi-IN":"रोकें","en-IN":"Stop"},
- copy:{"gu-IN":"કૉપિ","hi-IN":"कॉपी","en-IN":"Copy"},
- copied:{"gu-IN":"કૉપિ થયું","hi-IN":"कॉपी हुआ","en-IN":"Copied"},
- identity:{"gu-IN":"ઓળખ દસ્તાવેજ","hi-IN":"पहचान दस्तावेज़","en-IN":"IDENTITY DOCUMENTS"},
- business:{"gu-IN":"વ્યવસાય અને બેંક","hi-IN":"व्यवसाय और बैंक","en-IN":"BUSINESS & BANKING"}
-};
-function t(k){return T[k][lang]||T[k]["en-IN"];}
-
-var REPLIES={
- "gu-IN":["આદેશ સ્વીકાર્યો. એજન્ટ ગ્રીડ ફરીથી ગોઠવાયું — નવી યોજના ૧.૨ સેકન્ડમાં લાગુ થઈ.",
-          "વિશ્લેષણ પૂર્ણ. સેક્ટર બી-૪ માટે ઉપજ અંદાજ વધીને ૯.૧ ટન પ્રતિ હેક્ટર થયો.",
-          "બે ચેતવણી: બ્લોક એસ-૨ માં નાઇટ્રોજનની ઉણપ અને રોવર ૦૭ માં ખામી. મરામત મોકલું?",
-          "વરસાદની સંભાવના ૬૨% હોવાથી સિંચાઈ ૬ કલાક મુલતવી. અંદાજિત બચત ૭.૪ કિલોલિટર."],
- "hi-IN":["आदेश स्वीकार। एजेंट ग्रिड पुनः निर्धारित — नई योजना 1.2 सेकंड में लागू।",
-          "विश्लेषण पूर्ण। सेक्टर बी-4 की उपज संभावना बढ़कर 9.1 टन प्रति हेक्टेयर।",
-          "दो चेतावनियाँ: ब्लॉक एस-2 में नाइट्रोजन की कमी और रोवर 07 में खराबी। मरम्मत भेजूँ?",
-          "वर्षा संभावना 62% — सिंचाई 6 घंटे स्थगित। अनुमानित बचत 7.4 किलोलीटर।"],
- "en-IN":["Acknowledged. Re-tasking the agent grid — revised plan propagated in 1.2 s.",
-          "Analysis complete. Yield projection for Sector B4 raised to 9.1 t/ha (+4.3%).",
-          "Two anomalies flagged: nitrogen deficit in block S-2 and rover 07 torque fault. Dispatch maintenance?",
-          "Irrigation deferred 6 h — precipitation probability now 62%. Estimated saving: 7.4 kL."]
-};
-
-/* ---------------- themes ---------------- */
-var THEMES=[
- {id:"royal",  en:"Royal Dark Gold",  hi:"रॉयल डार्क गोल्ड", gu:"રોયલ ડાર્ક ગોલ્ડ", sw:["#0a1024","#fcd34d"]},
- {id:"emerald",en:"High-Tech Emerald",hi:"हाई-टेक एमराल्ड",  gu:"હાઇ-ટેક એમરાલ્ડ",  sw:["#03100c","#34d399"]},
- {id:"light",  en:"Clean Light Mode", hi:"क्लीन लाइट मोड",   gu:"ક્લીન લાઇટ મોડ",   sw:["#f4f6fb","#b45309"]},
- {id:"cyber",  en:"Cyberpunk Neon",   hi:"साइबरपंक नियॉन",   gu:"સાયબરપંક નિયોન",   sw:["#0a0316","#f0abfc"]}
-];
-
-/* ---------------- state ---------------- */
-var lang="gu-IN", theme="royal", listening=false, rec=null;
-var balance=184230.5, payouts=[], msgs=[], viewport=null, sideOpen=true, navOpen=true;
-
-var AGENTS=[
- {id:"hv-01",name:"Harvester Unit",code:"HV-01 · TALOS",method:"Autonomous Row Harvesting",task:"Harvesting Sector B4 — maize rows 22–48",state:"ACTIVE",progress:72,delta:14,
-  metrics:[["Yield captured","8.42 t"],["Throughput","1.9 t/h"],["Battery","68%"],["Blade wear","12%"],["Moisture","14.2%"],["GPS drift","±2.1 cm"]],
-  log:["Row 41 completed · 0 obstructions","Auger speed auto-tuned to 640 rpm","Grain moisture within target band"]},
- {id:"dr-02",name:"Aerial Scout",code:"DR-02 · KESTREL",method:"Multispectral NDVI Mapping",task:"Flying transect over Orchard North · tile 17/24",state:"SCANNING",progress:45,delta:-6,
-  metrics:[["Altitude","84 m"],["Coverage","62 ha"],["Battery","41%"],["NDVI mean","0.71"],["Wind","18 km/h"],["Images","3,182"]],
-  log:["Stress signature detected · block N-7","Headwind reduced ground speed 11%","Re-planning transect to recover ETA"]},
- {id:"ir-03",name:"Irrigation Mesh",code:"IR-03 · NAIAD",method:"Predictive Soil-Moisture Dosing",task:"Balancing valves 12–31 · deficit irrigation cycle",state:"ACTIVE",progress:88,delta:22,
-  metrics:[["Water used","41.3 kL"],["Saved vs plan","17%"],["Soil moisture","63%"],["Line pressure","3.1 bar"],["Active valves","19"],["Leak risk","Low"]],
-  log:["Valve 27 flow anomaly resolved","Rain forecast 62% · dosing reduced","Zone 4 reached field capacity"]},
- {id:"sw-04",name:"Soil Swarm",code:"SW-04 · MYCEL",method:"Micro-Rover Nutrient Sampling",task:"Recharging at dock 2 · 9 rovers queued",state:"CHARGING",progress:31,delta:-18,
-  metrics:[["Rovers online","9 / 12"],["Samples","1,140"],["Nitrogen","0.34%"],["pH mean","6.6"],["Dock power","4.8 kW"],["ETA resume","27 min"]],
-  log:["Rover 07 wheel torque fault flagged","Phosphorus deficit mapped · block S-2","Charge cycle 63% complete"]}
-];
-
-var DOCS=[
- {id:"d1",name:"Aadhaar_Card.pdf",   num:"XXXX XXXX 4821", cat:"identity", kind:"PDF", size:"412 KB", shared:true,  added:"12/03"},
- {id:"d2",name:"PAN_Card.pdf",       num:"ABCPD••••7F",    cat:"identity", kind:"PDF", size:"188 KB", shared:true,  added:"12/03"},
- {id:"d3",name:"Farm_GST_Certificate.pdf",num:"24ABCPD••••1Z5",cat:"business",kind:"PDF",size:"88 KB",shared:true, added:"02/04"},
- {id:"d4",name:"Bank_Mandate.png",   num:"HDFC ••4821",    cat:"business", kind:"PNG", size:"245 KB", shared:false, added:"18/05"}
-];
-
-var ROUTES=[{id:"bank",label:"Bank Transfer",meta:"HDFC ••4821 · IMPS / NEFT"},
-            {id:"stripe",label:"Stripe",meta:"acct_1Om••AI · instant payout"},
-            {id:"upi",label:"UPI",meta:"om.ai.master@okaxis"}];
-
-var NAV=[{i:"🛰",en:"Console",hi:"कंसोल",gu:"કન્સોલ"},
-         {i:"🤖",en:"Agents",hi:"एजेंट",gu:"એજન્ટ"},
-         {i:"🔐",en:"Document Vault",hi:"दस्तावेज़ वॉल्ट",gu:"દસ્તાવેજ વૉલ્ટ",act:"vault"},
-         {i:"💰",en:"Wealth & Payouts",hi:"संपत्ति व भुगतान",gu:"સંપત્તિ અને ચુકવણી",act:"wealth"},
-         {i:"📷",en:"Field Cams",hi:"फ़ील्ड कैम",gu:"ફીલ્ડ કેમ"},
-         {i:"📊",en:"Analytics",hi:"विश्लेषण",gu:"વિશ્લેષણ"}];
-
-/* ---------------- helpers ---------------- */
-function $(id){return document.getElementById(id);}
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
-function now(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
-function inr(n){return "₹ "+n.toLocaleString("en-IN",{maximumFractionDigits:2});}
-function toast(msg){var d=document.createElement("div");d.className="toast solid";d.textContent=msg;$("toasts").appendChild(d);setTimeout(function(){d.remove();},2200);}
-
-/* ---------------- WEB SPEECH: synthesis ---------------- */
-function speak(text,l){
-  if(!window.speechSynthesis)return false;
-  window.speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(text);
-  u.lang=l; u.rate=.98; u.pitch=1;
-  var vs=window.speechSynthesis.getVoices();
-  var v=vs.filter(function(x){return x.lang.replace("_","-")===l;})[0]
-     || vs.filter(function(x){return x.lang.replace("_","-").indexOf(l.split("-")[0])===0;})[0]
-     || vs.filter(function(x){return x.lang.indexOf("en")===0;})[0];
-  if(v)u.voice=v;
-  window.speechSynthesis.speak(u);
-  return true;
-}
-if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};}
-
-/* ---------------- WEB SPEECH: recognition ---------------- */
-function toggleVoice(){
-  if(listening){ if(rec)rec.stop(); return; }
-  var Ctor=window.webkitSpeechRecognition||window.SpeechRecognition;
-  if(!Ctor){ addMsg("om",t("unsupported"),false); return; }
-  rec=new Ctor();
-  rec.lang=lang; rec.continuous=false; rec.interimResults=true; rec.maxAlternatives=1;
-  rec.onstart=function(){listening=true;paintMic("");};
-  rec.onresult=function(e){
-    var fin="",part="";
-    for(var i=e.resultIndex;i<e.results.length;i++){
-      var r=e.results[i];
-      if(r.isFinal)fin+=r[0].transcript; else part+=r[0].transcript;
-    }
-    paintMic(part);
-    if(fin.trim()){ handle(fin.trim(),true); }
-  };
-  rec.onerror=function(e){ addMsg("om","Speech error: "+e.error,false); };
-  rec.onend=function(){ listening=false; paintMic(""); };
-  try{ rec.start(); }catch(err){}
-}
-function paintMic(interim){
-  var b=$("micBtn"),h=$("voiceHint");
-  b.className="mic "+(listening?"solid live":"soft");
-  $("micLbl").textContent=listening?t("listening"):t("voice");
-  if(listening||interim){h.classList.remove("hide");h.textContent=interim||t("listening");}
-  else h.classList.add("hide");
-}
-
-/* ---------------- CHAT ---------------- */
-function addMsg(role,text,voice,msgLang){
-  msgs.push({id:Date.now()+Math.random(),role:role,text:text,time:now(),voice:!!voice,lang:msgLang||lang});
-  renderStream();
-}
-function respond(text,speakBack){
-  var l=lang;
-  setTimeout(function(){
-    addMsg("om",text,speakBack,l);
-    if(speakBack)speak(text,l);
-  },520);
-}
-var WITHDRAW_WORDS=["withdraw","payout","transfer","money","पैसा","निकाल","भुगतान","ઉપાડ","ચુકવણી","પૈસા"];
-var VAULT_WORDS=["document","vault","aadhaar","pan","दस्तावेज","वॉल्ट","आधार","पैन","દસ્તાવેજ","વૉલ્ટ","આધાર","પાન"];
-
-function handle(txt,spoken){
-  addMsg("user",txt,spoken);
-  var low=txt.toLowerCase();
-  var hit=function(arr){return arr.some(function(w){return low.indexOf(w)>-1;});};
-  if(hit(WITHDRAW_WORDS)){ withdrawAll(spoken); return; }
-  if(hit(VAULT_WORDS)){
-    openVault();
-    var shared=DOCS.filter(function(d){return d.shared;}).length;
-    respond({"gu-IN":"વૉલ્ટ ખૂલ્યું. "+DOCS.length+" દસ્તાવેજ સંગ્રહિત (આધાર + પાન સહિત), "+shared+" એજન્ટ માટે ઉપલબ્ધ.",
-             "hi-IN":"वॉल्ट खुला। "+DOCS.length+" दस्तावेज़ संग्रहित (आधार व पैन सहित), "+shared+" एजेंट के लिए उपलब्ध।",
-             "en-IN":"Vault opened. "+DOCS.length+" documents stored (incl. Aadhaar & PAN), "+shared+" shared with agents."}[lang],spoken);
-    return;
-  }
-  var pool=REPLIES[lang];
-  respond(pool[Math.floor(Math.random()*pool.length)],spoken);
-}
-function sendText(){
-  var el=$("input"); if(!el.value.trim())return;
-  var v=el.value.trim(); el.value=""; handle(v,false);
-}
-
-function renderStream(){
-  var s=$("stream"),h="";
-  if(viewport){
-    h+='<div class="wrap viewport p2"><div class="row" style="justify-content:space-between">'+
-       '<p class="acc" style="font-size:11px;letter-spacing:.2em">'+esc(viewport.title)+'</p>'+
-       '<button class="muted" onclick="closeViewport()">✕</button></div>'+
-       '<div class="screenbox"><div><div class="spin"></div><p style="font-size:12px">'+esc(viewport.note)+'</p>'+
-       (viewport.extra?'<p class="acc" style="font-size:11px;margin-top:4px">'+esc(viewport.extra)+'</p>':'')+
-       '</div></div></div>';
-  }
-  msgs.forEach(function(m,idx){
-    var who=m.role==="user"?t("operator"):"OM-AI-MASTER";
-    h+='<div class="wrap msg '+(m.role==="user"?"me":"")+'"><div class="bub">'+
-       '<div class="meta">'+esc(who)+' · '+m.time+(m.voice?'<span class="vtag">🎙 VOICE</span>':'')+'</div>'+
-       esc(m.text);
-    if(m.role==="om"){
-      h+='<div class="acts">'+
-         '<button class="soft" id="sp'+idx+'" onclick="speakMsg('+idx+')" title="'+esc(t("speak"))+'"><b>🔊</b><span>'+esc(t("speak"))+'</span></button>'+
-         '<button class="soft" id="cp'+idx+'" onclick="copyMsg('+idx+')" title="'+esc(t("copy"))+'"><b>📋</b><span>'+esc(t("copy"))+'</span></button>'+
-         '<span class="loc">'+m.lang.toUpperCase()+'</span></div>';
-    }
-    h+='</div></div>';
-  });
-  s.innerHTML=h; s.scrollTop=s.scrollHeight;
-}
-
-/* --- per-message speaker button (TTS in the message's own language) --- */
-function speakMsg(i){
-  var m=msgs[i],btn=$("sp"+i);
-  if(window.speechSynthesis&&window.speechSynthesis.speaking){
-    window.speechSynthesis.cancel();
-    if(btn){btn.className="soft";btn.innerHTML="<b>🔊</b><span>"+esc(t("speak"))+"</span>";}
-    return;
-  }
-  if(!speak(m.text,m.lang)){toast("TTS unavailable");return;}
-  if(btn){btn.className="solid";btn.innerHTML="<b>⏹</b><span>"+esc(t("stop"))+"</span>";}
-  var poll=setInterval(function(){
-    if(!window.speechSynthesis.speaking){
-      clearInterval(poll);
-      var b=$("sp"+i);
-      if(b){b.className="soft";b.innerHTML="<b>🔊</b><span>"+esc(t("speak"))+"</span>";}
-    }
-  },400);
-}
-/* --- per-message copy button with ✅ confirmation --- */
-function copyMsg(i){
-  var m=msgs[i],btn=$("cp"+i);
-  var done=function(){
-    if(btn){btn.className="solid";btn.innerHTML="<b>✅</b><span>"+esc(t("copied"))+"</span>";}
-    toast("📋 "+t("copied"));
-    setTimeout(function(){var b=$("cp"+i);if(b){b.className="soft";b.innerHTML="<b>📋</b><span>"+esc(t("copy"))+"</span>";}},1700);
-  };
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(m.text).then(done,function(){fallbackCopy(m.text);done();});
-  }else{fallbackCopy(m.text);done();}
-}
-function fallbackCopy(txt){
-  var ta=document.createElement("textarea");
-  ta.value=txt;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";
-  document.body.appendChild(ta);ta.select();
-  try{document.execCommand("copy");}catch(e){}
-  document.body.removeChild(ta);
-}
-function closeViewport(){viewport=null;renderStream();}
-
-/* ---------------- PLUS MENU ---------------- */
-function togglePlus(e){
-  e.stopPropagation();
-  var m=$("plusMenu"),open=m.classList.contains("hide");
-  m.classList.toggle("hide"); $("plusBtn").className="circ "+(open?"solid rot":"soft");
-  if(open)renderPlus();
-}
-function renderPlus(){
-  var items=[["camera","📷",t("camera")],["video","🎬",t("video")],["screen","🖥",t("screen")]];
-  var h='<div class="row" style="justify-content:space-between;padding:0 8px 8px"><p class="acc tag">'+esc(t("modules"))+'</p>'+
-        '<button class="muted" onclick="togglePlus(event)">✕</button></div>';
-  items.forEach(function(it){
-    h+='<button class="item" onclick="pickMode(\''+it[0]+'\')"><span class="ico soft">'+it[1]+'</span><span>'+esc(it[2])+'</span></button>';
-  });
-  h+='<button class="item" onclick="openVault();togglePlus(event)"><span class="ico soft">🔐</span><span><b style="display:block;font-size:13px">'+esc(t("vault"))+'</b><small class="muted">'+esc(t("vaultHint"))+'</small></span></button>';
-  h+='<div class="urlbox"><p class="muted tag" style="margin-bottom:6px">🔗 '+esc(t("urlBox"))+'</p><div class="row" style="gap:7px">'+
-     '<input id="urlIn" placeholder="'+esc(t("urlPh"))+'" onkeydown="if(event.key===\'Enter\')scanUrl()" />'+
-     '<button class="solid" style="border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700" onclick="scanUrl()">'+esc(t("scan"))+'</button></div></div>';
-  $("plusMenu").innerHTML=h;
-}
-function pickMode(m){
-  var notes={camera:"Field cam 03 · aperture locked · frame captured",
-             video:"Live agent stream · 1080p60 · latency 42 ms",
-             screen:"Broadcasting Om-AI-Master console to 3 operators"};
-  viewport={title:t(m).toUpperCase(),note:notes[m],extra:""};
-  togglePlus(event); renderStream();
-}
-function scanUrl(){
-  var el=$("urlIn"); if(!el||!el.value.trim())return;
-  var u=el.value.trim();
-  viewport={title:t("urlBox").toUpperCase(),note:"Parsing "+u,extra:"Media resource · 3 frames extracted · crop stress score 0.21"};
-  togglePlus(event); handle("🔗 "+u,false);
-}
-document.addEventListener("mousedown",function(e){
-  var m=$("plusMenu");
-  if(!m.classList.contains("hide")&&!m.contains(e.target)&&e.target.id!=="plusBtn"){m.classList.add("hide");$("plusBtn").className="circ soft";}
-  var tm=$("themeMenu");
-  if(tm&&!tm.classList.contains("hide")&&!tm.contains(e.target))tm.classList.add("hide");
+// Global safety net: never let an uncaught error produce a blank page.
+window.addEventListener('error', function(e){
+  try { console.error('Om-AI-Master caught an error:', e.error || e.message || e); } catch(_ignored){}
+});
+window.addEventListener('unhandledrejection', function(e){
+  try { console.error('Om-AI-Master caught an unhandled promise rejection:', e.reason); } catch(_ignored){}
 });
 
-/* ---------------- WEALTH ---------------- */
-function renderRoute(){
-  var r=ROUTES.filter(function(x){return x.id===$("routeSel").value;})[0];
-  $("routeMeta").textContent=r.meta;
-}
-function withdrawAll(spoken){
-  var r=ROUTES.filter(function(x){return x.id===$("routeSel").value;})[0]||ROUTES[0];
-  var amt=balance; if(amt<=0){toast("No balance");return;}
-  balance=0; payouts.unshift({amt:amt,route:r.label,time:now()});
-  paintWealth();
-  var ref="OM-"+String(Date.now()).slice(-6);
-  respond({"gu-IN":"₹"+amt.toFixed(0)+" "+r.label+" મારફતે તમારા નોંધાયેલા ખાતામાં મોકલાયા. સંદર્ભ "+ref+".",
-           "hi-IN":"₹"+amt.toFixed(0)+" "+r.label+" द्वारा आपके पंजीकृत खाते में भेजे गए। संदर्भ "+ref+"।",
-           "en-IN":"₹"+amt.toFixed(0)+" released via "+r.label+" to your registered account. Ref "+ref+"."}[lang],!!spoken);
-  toast("💸 "+r.label+" · ₹"+amt.toFixed(0));
-}
-function paintWealth(){
-  $("balance").textContent=inr(balance);
-  $("payoutLog").innerHTML=payouts.slice(0,3).map(function(p){
-    return '<div class="row" style="justify-content:space-between;border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:10px">'+
-           '<span class="muted">'+esc(p.route)+' · '+p.time+'</span><span class="ok mono">₹'+p.amt.toFixed(0)+' ✓</span></div>';
-  }).join("");
-  var k=$("kpis").querySelector("[data-k=wallet]");
-  if(k)k.textContent="₹"+(balance/1000).toFixed(1)+"k";
-}
+(function(){
+  "use strict";
 
-/* ---------------- AGENTS ---------------- */
-function renderAgents(){
-  $("agentList").innerHTML=AGENTS.map(function(a){
-    return '<button class="card" onclick="openAgent(\''+a.id+'\')">'+
-     '<div class="row" style="justify-content:space-between;align-items:flex-start;gap:8px">'+
-      '<div><p style="font-size:13px;font-weight:600">'+esc(a.name)+'</p><p class="acc" style="font-size:10px;letter-spacing:.2em">'+esc(a.code)+'</p></div>'+
-      '<span class="chip">'+a.state+'</span></div>'+
-     '<p class="muted" style="font-size:11px;margin-top:7px">'+esc(a.method)+'</p>'+
-     '<div class="row" style="gap:8px;margin-top:9px"><div class="track"><div class="fill" style="width:'+a.progress+'%"></div></div>'+
-      '<span class="mono" style="font-size:11px;width:34px;text-align:right">'+a.progress+'%</span></div>'+
-     '<div class="row" style="justify-content:space-between;margin-top:7px;font-size:10px">'+
-      '<span class="'+(a.delta>=0?"ok":"bad")+'">'+(a.delta>=0?"▲ "+a.delta+" "+t("ahead"):"▼ "+Math.abs(a.delta)+" "+t("behind"))+'</span>'+
-      '<span class="muted">'+esc(t("drill"))+'</span></div></button>';
-  }).join("");
-  $("srail").innerHTML='<span class="acc" style="font-size:16px">💰</span>'+AGENTS.map(function(a){
-    return '<button class="kind soft" onclick="openAgent(\''+a.id+'\')" title="'+esc(a.name)+'">'+a.code.slice(0,2)+'</button>';
-  }).join("");
-}
-function openAgent(id){
-  var a=AGENTS.filter(function(x){return x.id===id;})[0];
-  var h='<div class="scrim" onclick="closeModal(event)"><div class="modal panel" onclick="event.stopPropagation()">'+
-   '<div class="mhead"><div><p class="acc" style="font-size:10px;letter-spacing:.3em">OM-AI-MASTER · '+esc(a.code)+'</p>'+
-   '<h3 style="font-size:19px;margin-top:3px">'+esc(a.name)+'</h3><p class="muted" style="font-size:12px">'+esc(a.method)+'</p></div>'+
-   '<div class="row" style="gap:8px"><button class="soft" style="border-radius:9px;padding:7px 10px" onclick="speak(\''+esc(a.name)+'. '+a.progress+' percent.\',lang)">🔊</button>'+
-   '<button class="soft" style="border-radius:9px;padding:7px 10px" onclick="closeModal()">✕</button></div></div><div class="mbody">'+
-   '<div class="cell"><p class="muted tag">'+esc(t("task"))+'</p><p style="font-size:13px;margin-top:4px">'+esc(a.task)+'</p>'+
-   '<div class="row" style="gap:10px;margin-top:10px"><div class="track" style="height:8px"><div class="fill" style="width:'+a.progress+'%"></div></div>'+
-   '<span class="mono">'+a.progress+'%</span></div>'+
-   '<p class="'+(a.delta>=0?"soft":"")+'" style="display:inline-block;border-radius:99px;padding:4px 11px;font-size:11px;margin-top:10px;'+(a.delta<0?"border:1px solid var(--bad);color:var(--bad)":"")+'">'+
-     (a.delta>=0?"▲ "+a.delta+" "+t("ahead"):"▼ "+Math.abs(a.delta)+" "+t("behind"))+'</p></div>'+
-   '<div><p class="muted tag" style="margin-bottom:8px">'+esc(t("metrics"))+'</p><div class="grid3">'+
-     a.metrics.map(function(m){return '<div class="cell"><p class="muted" style="font-size:10px">'+esc(m[0])+'</p><p class="acc mono" style="font-size:13px;margin-top:3px">'+esc(m[1])+'</p></div>';}).join("")+
-   '</div></div>'+
-   '<div><p class="muted tag" style="margin-bottom:8px">'+esc(t("events"))+'</p>'+
-     a.log.map(function(l,i){return '<div class="logline mono" style="margin-bottom:6px"><span class="acc">'+String(i+1).padStart(2,"0")+'</span>Om-AI-Master · '+esc(l)+'</div>';}).join("")+
-   '</div></div></div></div>';
-  $("modalHost").innerHTML=h;
-}
+  /* ================= SAFE STORAGE WRAPPER ================= */
+  // Wraps localStorage so that private-browsing restrictions, disabled
+  // storage, or quota errors never throw uncaught exceptions — the app
+  // simply falls back to an in-memory store for that session.
+  var memoryStore = {};
+  var storageAvailable = true;
+  try {
+    var testKey = '__omai_test__';
+    window.localStorage.setItem(testKey, '1');
+    window.localStorage.removeItem(testKey);
+  } catch (e) {
+    storageAvailable = false;
+    console.warn('localStorage unavailable, falling back to in-memory storage for this session.', e);
+  }
 
-/* ---------------- VAULT (Aadhaar / PAN layout) ---------------- */
-function openVault(){
-  var group=function(cat,title){
-    var rows=DOCS.filter(function(d){return d.cat===cat;});
-    if(!rows.length)return"";
-    return '<div><p class="muted tag" style="margin-bottom:8px">'+esc(title)+'</p><div style="display:flex;flex-direction:column;gap:8px">'+
-      rows.map(function(d){
-        return '<div class="docrow"><span class="kind soft">'+d.kind+'</span>'+
-        '<div style="flex:1;min-width:0"><p style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(d.name)+'</p>'+
-        '<p class="muted mono" style="font-size:10.5px">'+esc(d.num)+' · '+d.size+' · '+d.added+'</p></div>'+
-        '<button class="'+(d.shared?"solid":"soft")+'" style="border-radius:99px;padding:3px 9px;font-size:9px;font-weight:800" onclick="toggleDoc(\''+d.id+'\')">'+
-          (d.shared?"AGENTS ✓":"PRIVATE")+'</button>'+
-        '<button class="muted" onclick="delDoc(\''+d.id+'\')">✕</button></div>';
-      }).join("")+'</div></div>';
-  };
-  $("modalHost").innerHTML='<div class="scrim" onclick="closeModal(event)"><div class="modal panel" onclick="event.stopPropagation()">'+
-   '<div class="mhead"><div><p class="acc" style="font-size:10px;letter-spacing:.3em">🔐 OM-AI-MASTER</p>'+
-   '<h3 style="font-size:18px;margin-top:3px">'+esc(t("vault"))+'</h3><p class="muted" style="font-size:12px">'+esc(t("vaultHint"))+'</p></div>'+
-   '<button class="soft" style="border-radius:9px;padding:7px 10px" onclick="closeModal()">✕</button></div>'+
-   '<div class="mbody">'+
-   '<div class="drop" onclick="document.getElementById(\'fileIn\').click()" ondragover="event.preventDefault()" ondrop="dropFiles(event)">'+
-     '<input type="file" id="fileIn" multiple hidden onchange="addFiles(this.files)" />'+
-     '<p class="acc" style="font-size:22px">⬆</p><p style="font-size:13px;margin-top:4px">'+esc(t("upload"))+' · Aadhaar / PAN / PDF / PNG</p>'+
-     '<p class="muted" style="font-size:11px">AES-256 client vault · zero-knowledge index</p></div>'+
-   group("identity",t("identity"))+group("business",t("business"))+
-   '<p class="muted" style="font-size:11px">🔗 Agents may cite documents marked <b>AGENTS ✓</b> when filing applications, KYC, or transactions on your behalf.</p>'+
-   '</div></div></div>';
-}
-function toggleDoc(id){DOCS.forEach(function(d){if(d.id===id)d.shared=!d.shared;});openVault();}
-function delDoc(id){DOCS=DOCS.filter(function(d){return d.id!==id;});$("docCount").textContent=DOCS.length;openVault();}
-function dropFiles(e){e.preventDefault();addFiles(e.dataTransfer.files);}
-function addFiles(files){
-  if(!files)return;
-  Array.prototype.forEach.call(files,function(f){
-    var n=f.name.toLowerCase();
-    DOCS.unshift({id:"d"+Date.now()+Math.random(),name:f.name,
-      num:n.indexOf("aadhaar")>-1?"XXXX XXXX ••••":(n.indexOf("pan")>-1?"•••••••••":"encrypted"),
-      cat:(n.indexOf("aadhaar")>-1||n.indexOf("pan")>-1||n.indexOf("id")>-1)?"identity":"business",
-      kind:(f.name.split(".").pop()||"file").toUpperCase(),size:(f.size/1024).toFixed(0)+" KB",
-      shared:true,added:new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"2-digit"})});
-  });
-  $("docCount").textContent=DOCS.length; openVault(); toast("🔐 "+t("upload")+" ✓");
-}
-function closeModal(e){if(e&&e.target&&!e.target.classList.contains("scrim"))return;$("modalHost").innerHTML="";}
-
-/* ---------------- THEME / LANG / LAYOUT ---------------- */
-function themeName(x){return lang==="gu-IN"?x.gu:lang==="hi-IN"?x.hi:x.en;}
-function setTheme(id){
-  theme=id; document.documentElement.setAttribute("data-theme",id);
-  try{localStorage.setItem("om-theme",id);}catch(e){}
-  var cur=THEMES.filter(function(x){return x.id===id;})[0];
-  $("themeSwatch").innerHTML=cur.sw.map(function(c){return '<i style="background:'+c+'"></i>';}).join("");
-  $("themeMenu").classList.add("hide");
-  renderThemeMenu();
-}
-function renderThemeMenu(){
-  $("themeMenu").innerHTML=THEMES.map(function(x){
-    return '<button class="'+(x.id===theme?"on":"")+'" onclick="setTheme(\''+x.id+'\')">'+
-      '<span class="swatch">'+x.sw.map(function(c){return '<i style="background:'+c+'"></i>';}).join("")+'</span>'+esc(themeName(x))+'</button>';
-  }).join("");
-}
-function toggleThemeMenu(e){e.stopPropagation();renderThemeMenu();$("themeMenu").classList.toggle("hide");}
-function setLang(l){
-  lang=l; try{localStorage.setItem("om-lang",l);}catch(e){}
-  if(rec){rec.lang=l;}
-  paintStatic(); renderAgents(); renderStream(); renderThemeMenu();
-}
-function toggleNav(){navOpen=!navOpen;$("nav").classList.toggle("collapsed",!navOpen);$("navChev").textContent=navOpen?"‹":"›";}
-function toggleSide(){sideOpen=!sideOpen;$("side").classList.toggle("collapsed",!sideOpen);$("sideChev").textContent=sideOpen?"›":"‹";}
-
-/* ---------------- STATIC PAINT ---------------- */
-function paintStatic(){
-  $("hdrSub").textContent=t("subtitle");
-  $("input").placeholder=t("placeholder");
-  $("disc").textContent=t("disc");
-  $("telLbl").textContent=t("telemetry");
-  $("gridLbl").textContent=t("grid");
-  $("wealthLbl").textContent=t("wealth");
-  $("earnLbl").textContent=t("earnings");
-  $("availLbl").textContent=t("avail");
-  $("routeLbl").textContent=t("route");
-  $("autoLbl").textContent=t("auto");
-  $("wdBtn").textContent=t("withdraw");
-  $("themeLbl").textContent=t("theme");
-  $("micLbl").textContent=listening?t("listening"):t("voice");
-  $("docCount").textContent=DOCS.length;
-
-  $("langPill").innerHTML=LANGS.map(function(l){
-    return '<button class="'+(l.code===lang?"on":"")+'" title="'+l.label+'" onclick="setLang(\''+l.code+'\')">'+l.short+'</button>';
-  }).join("");
-  $("langSel").innerHTML=LANGS.map(function(l){
-    return '<option value="'+l.code+'"'+(l.code===lang?" selected":"")+'>'+l.native+'</option>';
-  }).join("");
-  $("routeSel").innerHTML=ROUTES.map(function(r){return '<option value="'+r.id+'">'+r.label+'</option>';}).join("");
-  renderRoute();
-
-  $("kpis").innerHTML=[["Soil","94%"],["Water","71%"],["Yield","1.18"],["Wallet","₹"+(balance/1000).toFixed(1)+"k"]].map(function(k){
-    return '<div class="kpi"><p>'+k[0]+'</p><p class="mono" '+(k[0]==="Wallet"?'data-k="wallet"':'')+'>'+k[1]+'</p></div>';
-  }).join("");
-
-  $("navList").innerHTML=NAV.map(function(n,i){
-    var label=lang==="gu-IN"?n.gu:lang==="hi-IN"?n.hi:n.en;
-    return '<button class="navbtn'+(i===0?" on":"")+'" onclick="navClick('+i+',this)"><span>'+n.i+'</span><span class="lbl">'+esc(label)+'</span></button>';
-  }).join("");
-}
-function navClick(i,el){
-  Array.prototype.forEach.call(document.querySelectorAll(".navbtn"),function(b){b.classList.remove("on");});
-  el.classList.add("on");
-  if(NAV[i].act==="vault")openVault();
-  if(NAV[i].act==="wealth"){sideOpen=true;$("side").classList.remove("collapsed");}
-}
-
-/* ---------------- BOOT ---------------- */
-(function boot(){
-  try{
-    var st=localStorage.getItem("om-theme"); if(st)theme=st;
-    var sl=localStorage.getItem("om-lang");  if(sl)lang=sl;
-  }catch(e){}
-  setTheme(theme);
-  paintStatic();
-  renderAgents();
-  paintWealth();
-  addMsg("om",t("welcome"),false,lang);
-
-  // start with the telemetry drawer closed on small screens
-  if(window.innerWidth<=640){ sideOpen=false; $("side").classList.add("collapsed"); $("sideChev").textContent="‹"; }
-
-  // Esc closes any modal / popup, Ctrl+/ focuses the command bar
-  document.addEventListener("keydown",function(e){
-    if(e.key==="Escape"){
-      $("modalHost").innerHTML="";
-      $("plusMenu").classList.add("hide"); $("plusBtn").className="circ soft";
-      $("themeMenu").classList.add("hide");
-      if(window.speechSynthesis)window.speechSynthesis.cancel();
-      if(listening&&rec)rec.stop();
+  function safeGet(key){
+    try {
+      if (storageAvailable) return window.localStorage.getItem(key);
+      return Object.prototype.hasOwnProperty.call(memoryStore, key) ? memoryStore[key] : null;
+    } catch (e) {
+      console.warn('storage read failed for', key, e);
+      return null;
     }
-    if((e.ctrlKey||e.metaKey)&&e.key==="/"){ e.preventDefault(); $("input").focus(); }
-  });
-  // stop speech when the tab is hidden
-  document.addEventListener("visibilitychange",function(){
-    if(document.hidden&&window.speechSynthesis)window.speechSynthesis.cancel();
-  });
+  }
+  function safeSet(key, value){
+    try {
+      if (storageAvailable) { window.localStorage.setItem(key, value); return true; }
+      memoryStore[key] = value;
+      return true;
+    } catch (e) {
+      console.warn('storage write failed for', key, e);
+      memoryStore[key] = value; // best-effort in-memory fallback even if storage exists but quota failed
+      return false;
+    }
+  }
+  function safeJsonGet(key, fallback){
+    try {
+      var raw = safeGet(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      console.warn('storage JSON parse failed for', key, e);
+      return fallback;
+    }
+  }
+  function safeJsonSet(key, value){
+    try {
+      return safeSet(key, JSON.stringify(value));
+    } catch (e) {
+      console.warn('storage JSON stringify failed for', key, e);
+      return false;
+    }
+  }
+
+  /* ================= TOAST HELPER ================= */
+  function showToast(message, kind){
+    try {
+      var stack = document.getElementById('toastStack');
+      if (!stack) { console.warn(message); return; }
+      var t = document.createElement('div');
+      t.className = 'toast' + (kind ? ' ' + kind : '');
+      t.textContent = message;
+      stack.appendChild(t);
+      requestAnimationFrame(function(){ t.classList.add('show'); });
+      setTimeout(function(){
+        t.classList.remove('show');
+        setTimeout(function(){ try { t.remove(); } catch(_e){} }, 300);
+      }, 4200);
+    } catch (e) {
+      console.warn('Toast failed to render:', message, e);
+    }
+  }
+
+  /* ================= THEME SWITCHER (dark/light + accent themes) ================= */
+  var html = document.documentElement;
+  var DARK_THEMES = ['royal-gold', 'emerald', 'cyberpunk'];
+  var LIGHT_THEME = 'light';
+  var savedTheme = safeGet('omai_theme') || 'royal-gold';
+  html.setAttribute('data-theme', savedTheme);
+
+  var modeSwitch = document.getElementById('modeSwitch');
+  var modeLabel = document.getElementById('modeLabel');
+  var lastDarkTheme = DARK_THEMES.indexOf(savedTheme) !== -1 ? savedTheme : 'royal-gold';
+
+  function applyTheme(t){
+    html.setAttribute('data-theme', t);
+    safeSet('omai_theme', t);
+    markActiveThemeDot();
+    var isLight = t === LIGHT_THEME;
+    if (modeSwitch) modeSwitch.classList.toggle('on', !isLight);
+    if (modeSwitch) modeSwitch.setAttribute('aria-checked', String(!isLight));
+    if (modeLabel) modeLabel.textContent = isLight ? 'Light mode' : 'Dark mode';
+  }
+
+  function markActiveThemeDot(){
+    var dots = document.querySelectorAll('.theme-dot');
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].classList.toggle('active', dots[i].getAttribute('data-t') === html.getAttribute('data-theme'));
+    }
+  }
+
+  var themeDots = document.querySelectorAll('.theme-dot');
+  for (var td = 0; td < themeDots.length; td++) {
+    themeDots[td].addEventListener('click', function(){
+      var t = this.getAttribute('data-t');
+      if (DARK_THEMES.indexOf(t) !== -1) lastDarkTheme = t;
+      applyTheme(t);
+    });
+  }
+
+  if (modeSwitch) {
+    function toggleMode(){
+      var isCurrentlyLight = html.getAttribute('data-theme') === LIGHT_THEME;
+      applyTheme(isCurrentlyLight ? lastDarkTheme : LIGHT_THEME);
+    }
+    modeSwitch.addEventListener('click', toggleMode);
+    modeSwitch.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMode(); }
+    });
+  }
+
+  applyTheme(savedTheme);
+
+  /* ================= NAV COLLAPSE + VIEW ROUTING ================= */
+  var navSidebar = document.getElementById('navSidebar');
+  var navToggle = document.getElementById('navToggle');
+  if (navToggle && navSidebar) {
+    navToggle.addEventListener('click', function(){
+      navSidebar.classList.toggle('collapsed');
+    });
+  }
+
+  var navItems = document.querySelectorAll('.nav-item[data-view]');
+  var views = document.querySelectorAll('.view');
+  for (var ni = 0; ni < navItems.length; ni++) {
+    navItems[ni].addEventListener('click', function(){
+      for (var x = 0; x < navItems.length; x++) navItems[x].classList.remove('active');
+      this.classList.add('active');
+      var target = this.getAttribute('data-view');
+      for (var y = 0; y < views.length; y++) {
+        views[y].classList.toggle('active', views[y].id === 'view-' + target);
+      }
+    });
+  }
+
+  /* ================= LANGUAGE STATE ================= */
+  var langSelect = document.getElementById('langSelect');
+  var currentLang = safeGet('omai_lang') || 'en-US';
+  if (langSelect) {
+    langSelect.value = currentLang;
+    langSelect.addEventListener('change', function(){
+      currentLang = langSelect.value;
+      safeSet('omai_lang', currentLang);
+    });
+  }
+
+  /* ================= BULLETPROOF TEXT-TO-SPEECH (TTS) ================= */
+  var speechSupported = false;
+  try {
+    speechSupported = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+  } catch (e) {
+    speechSupported = false;
+  }
+
+  var cachedVoices = [];
+  function loadVoices(){
+    try {
+      cachedVoices = (speechSupported && window.speechSynthesis) ? (window.speechSynthesis.getVoices() || []) : [];
+    } catch (e) {
+      console.warn('getVoices() threw an error:', e);
+      cachedVoices = [];
+    }
+    return cachedVoices;
+  }
+
+  if (speechSupported) {
+    try {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    } catch (e) {
+      console.warn('Could not attach onvoiceschanged handler:', e);
+    }
+  }
+
+  // Related-language fallback chains: Gujarati -> Hindi -> Indian English ->
+  // generic English, so speech always comes out even without a native voice.
+  var FALLBACK_CHAINS = {
+    gu: ['hi', 'en-in', 'en-gb', 'en-us', 'en'],
+    hi: ['en-in', 'en-gb', 'en-us', 'en'],
+    en: ['en-in', 'en-gb', 'en-us', 'en']
+  };
+
+  function selectVoiceForLang(lang){
+    var voices = loadVoices();
+    if (!voices || !voices.length) {
+      return { voice: null, usedFallback: false, reason: 'no-voices-available' };
+    }
+    var requested = (lang || 'en-US').toLowerCase();
+    var baseLang = requested.split('-')[0];
+
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i] && voices[i].lang && voices[i].lang.toLowerCase() === requested) {
+        return { voice: voices[i], usedFallback: false };
+      }
+    }
+    for (var j = 0; j < voices.length; j++) {
+      var vLangLower = (voices[j] && voices[j].lang || '').toLowerCase();
+      if (vLangLower.indexOf(baseLang) === 0) {
+        return { voice: voices[j], usedFallback: false };
+      }
+    }
+    var chain = FALLBACK_CHAINS[baseLang] || ['en-in', 'en-us', 'en-gb', 'en'];
+    for (var c = 0; c < chain.length; c++) {
+      var chainLang = chain[c];
+      for (var k = 0; k < voices.length; k++) {
+        var vLang = (voices[k] && voices[k].lang || '').toLowerCase();
+        if (vLang.indexOf(chainLang) === 0) {
+          return { voice: voices[k], usedFallback: true, fallbackLang: voices[k].lang };
+        }
+      }
+    }
+    for (var d = 0; d < voices.length; d++) {
+      if (voices[d] && voices[d].default) {
+        return { voice: voices[d], usedFallback: true, fallbackLang: voices[d].lang };
+      }
+    }
+    return { voice: voices[0], usedFallback: true, fallbackLang: voices[0].lang };
+  }
+
+  function speakText(text, lang, btnEl){
+    if (!speechSupported) {
+      showToast('Text-to-speech is not supported in this browser.', 'error');
+      return;
+    }
+    if (!text || !String(text).trim()) return;
+
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {
+      console.warn('speechSynthesis.cancel() failed:', e);
+    }
+
+    var requestedLang = lang || currentLang;
+
+    function fireUtterance(){
+      try {
+        var selection = selectVoiceForLang(requestedLang);
+        var utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.97;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        if (selection.voice) {
+          utterance.voice = selection.voice;
+          utterance.lang = selection.voice.lang || requestedLang;
+        } else {
+          utterance.lang = requestedLang;
+        }
+
+        utterance.onstart = function(){
+          try { if (btnEl) btnEl.classList.add('speaking'); } catch(_e){}
+        };
+        utterance.onerror = function(e){
+          try { if (btnEl) btnEl.classList.remove('speaking'); } catch(_e){}
+          var reason = (e && e.error) ? e.error : 'unknown error';
+          console.error('TTS error:', reason);
+          showToast('Speech playback had an issue (' + reason + '). Falling back to default voice.', 'warn');
+          // Last-resort fallback: try once more with a completely bare
+          // utterance and no explicit voice, letting the browser choose.
+          try {
+            var bareUtterance = new SpeechSynthesisUtterance(text);
+            bareUtterance.lang = 'en-US';
+            bareUtterance.onerror = function(err){
+              console.error('Fallback TTS also failed:', err);
+              showToast('Speech could not be played on this device.', 'error');
+            };
+            window.speechSynthesis.speak(bareUtterance);
+          } catch (fallbackErr) {
+            console.error('Fallback TTS attempt threw an exception:', fallbackErr);
+          }
+        };
+        utterance.onend = function(){
+          try { if (btnEl) btnEl.classList.remove('speaking'); } catch(_e){}
+        };
+
+        if (selection.usedFallback) {
+          var voiceLabel = selection.voice ? (selection.voice.name + ' — ' + selection.voice.lang) : 'default system voice';
+          console.warn('No native voice found for "' + requestedLang + '". Falling back to: ' + voiceLabel);
+          showToast('No ' + requestedLang + ' voice on this device — speaking with ' + voiceLabel + ' instead.', 'warn');
+        } else if (!selection.voice) {
+          console.warn('No speech voices reported by this browser for "' + requestedLang + '"; attempting default playback.');
+        }
+
+        setTimeout(function(){
+          try {
+            window.speechSynthesis.speak(utterance);
+          } catch (speakErr) {
+            console.error('speechSynthesis.speak() threw:', speakErr);
+            showToast('Speech playback failed to start. Please try again.', 'error');
+          }
+        }, 60);
+      } catch (outerErr) {
+        console.error('speakText() failed unexpectedly:', outerErr);
+        showToast('Speech playback is currently unavailable.', 'error');
+      }
+    }
+
+    try {
+      if (!loadVoices().length) {
+        var settled = false;
+        var onVoicesReady = function(){
+          if (settled) return;
+          settled = true;
+          try { window.speechSynthesis.removeEventListener('voiceschanged', onVoicesReady); } catch(_e){}
+          fireUtterance();
+        };
+        try { window.speechSynthesis.addEventListener('voiceschanged', onVoicesReady); } catch(_e){}
+        setTimeout(function(){
+          if (!settled) {
+            settled = true;
+            try { window.speechSynthesis.removeEventListener('voiceschanged', onVoicesReady); } catch(_e){}
+            fireUtterance();
+          }
+        }, 400);
+      } else {
+        fireUtterance();
+      }
+    } catch (e) {
+      console.error('speakText() voice-loading stage failed:', e);
+      showToast('Speech playback is currently unavailable.', 'error');
+    }
+  }
+
+  /* ================= BULLETPROOF SPEECH-TO-TEXT (STT) ================= */
+  var SpeechRecognitionImpl = null;
+  try {
+    SpeechRecognitionImpl = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  } catch (e) {
+    SpeechRecognitionImpl = null;
+  }
+
+  var recognition = null;
+  var isListening = false;
+  var micBtn = document.getElementById('micBtn');
+  var chatInput = document.getElementById('chatInput');
+
+  if (SpeechRecognitionImpl) {
+    try {
+      recognition = new SpeechRecognitionImpl();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = function(){
+        isListening = true;
+        if (micBtn) micBtn.classList.add('listening');
+      };
+      recognition.onerror = function(e){
+        console.error('Speech recognition error:', e && e.error ? e.error : e);
+        isListening = false;
+        if (micBtn) micBtn.classList.remove('listening');
+        showToast('Voice input had an issue (' + ((e && e.error) || 'unknown') + '). Please try typing instead.', 'warn');
+      };
+      recognition.onend = function(){
+        isListening = false;
+        if (micBtn) micBtn.classList.remove('listening');
+      };
+      recognition.onresult = function(event){
+        try {
+          var transcript = '';
+          for (var i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          if (chatInput) chatInput.value = transcript;
+        } catch (e) {
+          console.error('Failed to parse speech recognition result:', e);
+        }
+      };
+    } catch (e) {
+      console.warn('Speech recognition failed to initialize:', e);
+      recognition = null;
+    }
+  }
+
+  if (micBtn) {
+    if (!recognition) {
+      micBtn.classList.add('unsupported');
+      micBtn.title = 'Voice input is not supported in this browser';
+    }
+    micBtn.addEventListener('click', function(){
+      if (!recognition) {
+        showToast('Voice recognition is not supported in this browser. Try Chrome on desktop or Android.', 'warn');
+        return;
+      }
+      if (isListening) {
+        try { recognition.stop(); } catch (e) { console.warn('recognition.stop() failed:', e); }
+        return;
+      }
+      try {
+        recognition.lang = currentLang;
+        recognition.start();
+      } catch (err) {
+        console.error('recognition.start() failed:', err);
+        showToast('Could not start voice input. Please check microphone permissions.', 'error');
+      }
+    });
+  }
+
+  /* ================= CHAT ENGINE ================= */
+  var messagesEl = document.getElementById('messages');
+  var sendBtn = document.getElementById('sendBtn');
+  var camBtn = document.getElementById('camBtn');
+
+  var strings = {
+    'en-US': {
+      greet: "Namaste! I am Om-AI-Master, your autonomous farm and wealth agent. Ask me about your harvester, drone scout, irrigation, yield, or wealth.",
+      unknown: "I have logged your message. I can currently report on: harvester status, drone scout, irrigation, today's yield, and total wealth. Try asking about one of those.",
+      harvester: "Harvester Unit HV-01 is currently {status} at {battery}% battery, working sector {sector}.",
+      drone: "Aerial Scout DR-02 has completed {passes} scanning passes today and is at {battery}% battery.",
+      irrigation: "Irrigation system is {status}, current flow rate {flow} L/min across {zones} zones.",
+      yield: "Today's recorded yield is {yield} kg, valued at approximately ₹{revenue} at current market price.",
+      wealth: "Your total accumulated wealth is currently ₹{wealth}, after {payouts} automated payouts this session."
+    },
+    'hi-IN': {
+      greet: "नमस्ते! मैं ओम-एआई-मास्टर हूँ, आपका स्वचालित खेत और संपत्ति सहायक। हार्वेस्टर, ड्रोन, सिंचाई, उपज या संपत्ति के बारे में पूछें।",
+      unknown: "आपका संदेश दर्ज कर लिया गया है। मैं फिलहाल हार्वेस्टर, ड्रोन स्काउट, सिंचाई, आज की उपज और कुल संपत्ति की जानकारी दे सकता हूँ।",
+      harvester: "हार्वेस्टर यूनिट एचवी-01 अभी {status} है, बैटरी {battery}%, सेक्टर {sector} में काम कर रहा है।",
+      drone: "एरियल स्काउट डीआर-02 ने आज {passes} स्कैनिंग पास पूरे किए हैं, बैटरी {battery}%।",
+      irrigation: "सिंचाई प्रणाली {status} है, वर्तमान प्रवाह दर {flow} लीटर/मिनट, {zones} ज़ोन में।",
+      yield: "आज की उपज {yield} किलोग्राम है, वर्तमान बाजार भाव पर लगभग ₹{revenue} की।",
+      wealth: "आपकी कुल संपत्ति ₹{wealth} है, इस सत्र में {payouts} स्वचालित भुगतान के बाद।"
+    },
+    'gu-IN': {
+      greet: "નમસ્તે! હું ઓમ-એઆઈ-માસ્ટર છું, તમારો સ્વયંસંચાલિત ખેતર અને સંપત્તિ સહાયક. હાર્વેસ્ટર, ડ્રોન, સિંચાઈ, ઉપજ કે સંપત્તિ વિશે પૂછો.",
+      unknown: "તમારો સંદેશ નોંધાયો છે. હું અત્યારે હાર્વેસ્ટર, ડ્રોન સ્કાઉટ, સિંચાઈ, આજની ઉપજ અને કુલ સંપત્તિ વિશે માહિતી આપી શકું છું.",
+      harvester: "હાર્વેસ્ટર યુનિટ એચવી-01 હાલમાં {status} છે, બેટરી {battery}%, સેક્ટર {sector} માં કામ કરે છે.",
+      drone: "એરિયલ સ્કાઉટ ડીઆર-02 એ આજે {passes} સ્કેનિંગ પાસ પૂરા કર્યા છે, બેટરી {battery}%.",
+      irrigation: "સિંચાઈ સિસ્ટમ {status} છે, વર્તમાન પ્રવાહ દર {flow} લિટર/મિનિટ, {zones} ઝોનમાં.",
+      yield: "આજની ઉપજ {yield} કિલોગ્રામ છે, હાલના બજાર ભાવે લગભગ ₹{revenue} ની.",
+      wealth: "તમારી કુલ સંપત્તિ ₹{wealth} છે, આ સત્રમાં {payouts} સ્વયંસંચાલિત ચુકવણી પછી."
+    }
+  };
+
+  function fillTemplate(tpl, data){
+    return tpl.replace(/\{(\w+)\}/g, function(_, key){ return data[key] !== undefined ? data[key] : ''; });
+  }
+
+  function addMessage(text, sender, lang){
+    if (!messagesEl) return null;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg ' + sender;
+
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
+
+    var meta = document.createElement('div');
+    meta.className = 'msg-meta';
+    var time = document.createElement('span');
+    time.textContent = new Date().toLocaleTimeString();
+    meta.appendChild(time);
+
+    var speakBtn = document.createElement('button');
+    speakBtn.className = 'icon-btn';
+    speakBtn.title = 'Speak this message';
+    speakBtn.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>';
+    speakBtn.addEventListener('click', function(){
+      speakText(text, lang || currentLang, speakBtn);
+    });
+    meta.appendChild(speakBtn);
+
+    wrap.appendChild(meta);
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return wrap;
+  }
+
+  function showTyping(){
+    if (!messagesEl) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg ai';
+    wrap.id = 'typingIndicator';
+    var t = document.createElement('div');
+    t.className = 'bubble typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    wrap.appendChild(t);
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+  function hideTyping(){
+    var el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  function generateReply(userText){
+    var lc = userText.toLowerCase();
+    var s = strings[currentLang] || strings['en-US'];
+
+    if (/harvest|hv-01|hv 01/i.test(lc)) return fillTemplate(s.harvester, agentState.harvester);
+    if (/drone|scout|dr-02|dr 02/i.test(lc)) return fillTemplate(s.drone, agentState.drone);
+    if (/irrigat|water|pani|paani/i.test(lc)) return fillTemplate(s.irrigation, agentState.irrigation);
+    if (/yield|upaj|उपज|ઉપજ|harvest amount/i.test(lc)) {
+      return fillTemplate(s.yield, {
+        yield: wealthState.yieldToday.toFixed(1),
+        revenue: Math.round(wealthState.yieldToday * wealthState.pricePerKg).toLocaleString('en-IN')
+      });
+    }
+    if (/wealth|money|paisa|पैसा|પૈસા|balance|dhan|धन/i.test(lc)) {
+      return fillTemplate(s.wealth, {
+        wealth: Math.round(wealthState.totalWealth).toLocaleString('en-IN'),
+        payouts: wealthState.payoutCount
+      });
+    }
+    if (/^(hi|hello|namaste|नमस्ते|નમસ્તે)/i.test(lc)) return s.greet;
+    return s.unknown;
+  }
+
+  function sendMessage(){
+    if (!chatInput) return;
+    var text = chatInput.value.trim();
+    if (!text) return;
+    addMessage(text, 'user', currentLang);
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+
+    showTyping();
+    var delay = 550 + Math.random() * 500;
+    setTimeout(function(){
+      hideTyping();
+      var reply = generateReply(text);
+      addMessage(reply, 'ai', currentLang);
+    }, delay);
+  }
+
+  if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+  if (chatInput) {
+    chatInput.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    chatInput.addEventListener('input', function(){
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+    });
+  }
+
+  if (camBtn) {
+    camBtn.addEventListener('click', function(){
+      addMessage('[Media attachment simulated: field-photo.jpg queued for analysis]', 'user', currentLang);
+      showTyping();
+      setTimeout(function(){
+        hideTyping();
+        addMessage('Image received. Crop health analysis would run here in a full deployment with a vision model connected.', 'ai', currentLang);
+      }, 900);
+    });
+  }
+
+  addMessage(strings['en-US'].greet, 'ai', 'en-US');
+
+  /* ================= AGENT TELEMETRY SIMULATION ================= */
+  var agentState = {
+    harvester: { status: 'Active', battery: 82, sector: 'C-4' },
+    drone: { status: 'Active', battery: 67, passes: 12 },
+    irrigation: { status: 'Running', flow: 45, zones: 6 }
+  };
+
+  var agentDefs = [
+    { key: 'harvester', name: 'Harvester Unit', id: 'HV-01', icon: 'H' },
+    { key: 'drone', name: 'Aerial Scout', id: 'DR-02', icon: 'D' },
+    { key: 'irrigation', name: 'Irrigation Grid', id: 'IRR-03', icon: 'I' }
+  ];
+
+  function agentBadgeClass(status){
+    var s = (status || '').toLowerCase();
+    if (s === 'active' || s === 'running' || s === 'online') return 'active';
+    if (s === 'idle' || s === 'standby' || s === 'charging') return 'idle';
+    return 'alert';
+  }
+
+  function renderAgentValue(def){
+    var st = agentState[def.key];
+    if (def.key === 'harvester') return { pct: st.battery, status: st.status, line: 'Battery ' + st.battery + '% · Sector ' + st.sector };
+    if (def.key === 'drone') return { pct: st.battery, status: st.status, line: 'Battery ' + st.battery + '% · ' + st.passes + ' passes today' };
+    if (def.key === 'irrigation') return { pct: Math.min(100, st.flow * 2), status: st.status, line: st.flow + ' L/min · ' + st.zones + ' zones' };
+    return { pct: 0, status: 'Unknown', line: '' };
+  }
+
+  function renderAgents(){
+    var containers = [document.getElementById('agentList'), document.getElementById('agentListMain')];
+    var html = '';
+    for (var a = 0; a < agentDefs.length; a++) {
+      var def = agentDefs[a];
+      var v = renderAgentValue(def);
+      var badgeClass = agentBadgeClass(v.status);
+      var barColor = badgeClass === 'alert' ? 'var(--bad)' : (badgeClass === 'idle' ? 'var(--warn)' : 'var(--good)');
+      html += '' +
+        '<div class="agent-card">' +
+          '<div class="agent-icon">' + def.icon + '</div>' +
+          '<div class="agent-info">' +
+            '<div class="agent-name">' + def.name + '</div>' +
+            '<div class="agent-id">' + def.id + ' · ' + v.line + '</div>' +
+            '<div class="agent-bar-track"><div class="agent-bar-fill" style="width:' + v.pct + '%; background:' + barColor + ';"></div></div>' +
+          '</div>' +
+          '<div class="agent-badge ' + badgeClass + '">' + v.status + '</div>' +
+        '</div>';
+    }
+    for (var c = 0; c < containers.length; c++) {
+      if (containers[c]) containers[c].innerHTML = html;
+    }
+
+    var activeCount = 0;
+    for (var ac = 0; ac < agentDefs.length; ac++) {
+      if (agentBadgeClass(renderAgentValue(agentDefs[ac]).status) === 'active') activeCount++;
+    }
+    var dashAgents = document.getElementById('dashAgents');
+    if (dashAgents) dashAgents.textContent = activeCount + ' / ' + agentDefs.length;
+    var dashMoisture = document.getElementById('dashMoisture');
+    if (dashMoisture) dashMoisture.textContent = Math.round(35 + Math.sin(Date.now() / 90000) * 12) + '%';
+  }
+
+  function logEvent(agent, event){
+    var tbody = document.getElementById('eventLog');
+    if (!tbody) return;
+    var tr = document.createElement('tr');
+    var tdTime = document.createElement('td'); tdTime.textContent = new Date().toLocaleTimeString();
+    var tdAgent = document.createElement('td'); tdAgent.textContent = agent;
+    var tdEvent = document.createElement('td'); tdEvent.textContent = event;
+    tr.appendChild(tdTime); tr.appendChild(tdAgent); tr.appendChild(tdEvent);
+    tbody.insertBefore(tr, tbody.firstChild);
+    while (tbody.children.length > 8) tbody.removeChild(tbody.lastChild);
+  }
+
+  function tickAgents(){
+    agentState.harvester.battery = Math.max(5, Math.min(100, Math.round(agentState.harvester.battery + (Math.random() * 4 - 2.4))));
+    agentState.harvester.status = agentState.harvester.battery < 15 ? 'Charging' : (Math.random() > 0.1 ? 'Active' : 'Idle');
+
+    agentState.drone.battery = Math.max(5, Math.min(100, Math.round(agentState.drone.battery + (Math.random() * 3 - 2))));
+    if (Math.random() > 0.7) agentState.drone.passes += 1;
+    agentState.drone.status = agentState.drone.battery < 12 ? 'Idle' : 'Active';
+
+    agentState.irrigation.flow = Math.max(0, Math.round(agentState.irrigation.flow + (Math.random() * 10 - 5)));
+    agentState.irrigation.status = agentState.irrigation.flow > 5 ? 'Running' : 'Idle';
+
+    renderAgents();
+
+    if (Math.random() > 0.75) {
+      var events = [
+        ['HV-01', 'Completed row 14 harvesting cycle'],
+        ['DR-02', 'Field scan uploaded, no pest anomalies'],
+        ['IRR-03', 'Zone 4 valve cycle completed'],
+        ['DR-02', 'Battery low, returning to dock'],
+        ['HV-01', 'Fuel/charge topped up']
+      ];
+      var e = events[Math.floor(Math.random() * events.length)];
+      logEvent(e[0], e[1]);
+    }
+
+    var clock = document.getElementById('agentClock');
+    if (clock) clock.textContent = new Date().toLocaleTimeString();
+  }
+
+  renderAgents();
+  setInterval(tickAgents, 3500);
+
+  /* ================= WEALTH TRACKING & PAYOUTS ================= */
+  var wealthState = {
+    totalWealth: 128450,
+    yieldToday: 340.5,
+    pricePerKg: 42,
+    opCostPerKg: 11,
+    payoutCount: 0,
+    payoutTotal: 0
+  };
+
+  function fmtINR(n){
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
+
+  function renderWealth(){
+    var revenue = wealthState.yieldToday * wealthState.pricePerKg;
+    var cost = wealthState.yieldToday * wealthState.opCostPerKg;
+
+    var el;
+    el = document.getElementById('wealthTotal'); if (el) el.textContent = fmtINR(wealthState.totalWealth);
+    el = document.getElementById('statYieldToday'); if (el) el.textContent = wealthState.yieldToday.toFixed(1) + ' kg';
+    el = document.getElementById('statPrice'); if (el) el.textContent = '₹' + wealthState.pricePerKg + '/kg';
+    el = document.getElementById('statRevenue'); if (el) el.textContent = fmtINR(revenue);
+    el = document.getElementById('statCost'); if (el) el.textContent = fmtINR(cost);
+    el = document.getElementById('dashYield'); if (el) el.textContent = wealthState.yieldToday.toFixed(1) + ' kg';
+    el = document.getElementById('dashWealth'); if (el) el.textContent = fmtINR(wealthState.totalWealth);
+    el = document.getElementById('ledgerWealth'); if (el) el.textContent = fmtINR(wealthState.totalWealth);
+    el = document.getElementById('ledgerPayouts'); if (el) el.textContent = fmtINR(wealthState.payoutTotal);
+  }
+
+  function logPayout(amount, note){
+    var log = document.getElementById('payoutLog');
+    if (log) {
+      var entry = document.createElement('div');
+      entry.textContent = new Date().toLocaleTimeString() + ' — ' + note + ': ' + fmtINR(amount);
+      log.insertBefore(entry, log.firstChild);
+      while (log.children.length > 6) log.removeChild(log.lastChild);
+    }
+
+    var txnBody = document.getElementById('txnLog');
+    if (txnBody) {
+      var tr = document.createElement('tr');
+      var tdTime = document.createElement('td'); tdTime.textContent = new Date().toLocaleTimeString();
+      var tdNote = document.createElement('td'); tdNote.textContent = note;
+      var tdAmt = document.createElement('td'); tdAmt.textContent = fmtINR(amount);
+      tr.appendChild(tdTime); tr.appendChild(tdNote); tr.appendChild(tdAmt);
+      txnBody.insertBefore(tr, txnBody.firstChild);
+      while (txnBody.children.length > 10) txnBody.removeChild(txnBody.lastChild);
+    }
+  }
+
+  var payoutBtn = document.getElementById('triggerPayout');
+  if (payoutBtn) {
+    payoutBtn.addEventListener('click', function(){
+      var revenue = wealthState.yieldToday * wealthState.pricePerKg;
+      var cost = wealthState.yieldToday * wealthState.opCostPerKg;
+      var net = Math.round(revenue - cost);
+      if (net <= 0) net = 100;
+
+      wealthState.totalWealth += net;
+      wealthState.payoutCount += 1;
+      wealthState.payoutTotal += net;
+
+      logPayout(net, 'Automated payout');
+      renderWealth();
+      addMessage('Automated payout of ' + fmtINR(net) + ' triggered and added to your total wealth.', 'ai', currentLang);
+    });
+  }
 
   setInterval(function(){
-    AGENTS.forEach(function(a){a.progress=Math.min(100,Math.round(a.progress+Math.random()*1.2));});
-    balance=+(balance+Math.random()*40).toFixed(2);
-    renderAgents(); paintWealth();
-  },2500);
+    wealthState.yieldToday = Math.max(0, wealthState.yieldToday + (Math.random() * 6 - 2));
+    wealthState.pricePerKg = Math.max(20, Math.round(wealthState.pricePerKg + (Math.random() * 2 - 1)));
+    renderWealth();
+  }, 5000);
+
+  renderWealth();
+
+  /* ================= SECURE DOCUMENT VAULT (Aadhaar / PAN tabs) ================= */
+  var VAULT_KEY = 'omai_vault_docs';
+  var activeDocType = 'Aadhaar';
+
+  function getVaultDocs(){
+    return safeJsonGet(VAULT_KEY, []);
+  }
+  function saveVaultDocs(docs){
+    safeJsonSet(VAULT_KEY, docs);
+  }
+
+  function redactedLabel(type, number){
+    var clean = String(number).replace(/\s+/g, '');
+    var last = clean.length >= 4 ? clean.slice(-4) : clean;
+    return '[' + type + ' Redacted] •••• ' + last;
+  }
+
+  function setActiveDocType(type){
+    activeDocType = type;
+    var tabGroups = [document.getElementById('vaultTabsMain'), document.getElementById('vaultTabsSide')];
+    for (var g = 0; g < tabGroups.length; g++) {
+      var group = tabGroups[g];
+      if (!group) continue;
+      var tabs = group.querySelectorAll('.vault-tab');
+      for (var t = 0; t < tabs.length; t++) {
+        tabs[t].classList.toggle('active', tabs[t].getAttribute('data-doctype') === type);
+      }
+    }
+    renderVault();
+  }
+
+  function wireVaultTabs(containerId){
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var tabs = container.querySelectorAll('.vault-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener('click', function(){
+        setActiveDocType(this.getAttribute('data-doctype'));
+      });
+    }
+  }
+  wireVaultTabs('vaultTabsMain');
+  wireVaultTabs('vaultTabsSide');
+
+  function renderVault(){
+    var allDocs = getVaultDocs();
+    var docs = [];
+    for (var i = 0; i < allDocs.length; i++) {
+      if (allDocs[i] && allDocs[i].type === activeDocType) docs.push({ doc: allDocs[i], globalIndex: i });
+    }
+
+    var targets = [document.getElementById('vaultList'), document.getElementById('vaultListMain')];
+    var html = '';
+    if (!docs.length) {
+      html = '<div class="empty-note">No ' + activeDocType + ' documents stored yet.</div>';
+    } else {
+      for (var d = 0; d < docs.length; d++) {
+        var doc = docs[d].doc;
+        var idx = docs[d].globalIndex;
+        var displayNum = doc.revealed ? doc.number : redactedLabel(doc.type, doc.number);
+        html += '' +
+          '<div class="vault-item">' +
+            '<div class="vault-item-head"><span class="t">' + doc.type + '</span></div>' +
+            '<div class="vault-redacted">' + displayNum + '</div>' +
+            '<div class="vault-item-actions">' +
+              '<button class="mini-btn" data-action="toggle" data-idx="' + idx + '">' + (doc.revealed ? 'Hide' : 'Reveal') + '</button>' +
+              '<button class="mini-btn danger" data-action="delete" data-idx="' + idx + '">Delete</button>' +
+            '</div>' +
+          '</div>';
+      }
+    }
+
+    for (var tI = 0; tI < targets.length; tI++) {
+      var target = targets[tI];
+      if (!target) continue;
+      target.innerHTML = html;
+      var buttons = target.querySelectorAll('button[data-action]');
+      for (var b = 0; b < buttons.length; b++) {
+        buttons[b].addEventListener('click', function(){
+          var idx = parseInt(this.getAttribute('data-idx'), 10);
+          var action = this.getAttribute('data-action');
+          var docsNow = getVaultDocs();
+          if (!docsNow[idx]) return;
+          if (action === 'toggle') {
+            docsNow[idx].revealed = !docsNow[idx].revealed;
+            saveVaultDocs(docsNow);
+            renderVault();
+          } else if (action === 'delete') {
+            docsNow.splice(idx, 1);
+            saveVaultDocs(docsNow);
+            renderVault();
+          }
+        });
+      }
+    }
+  }
+
+  function addVaultDoc(numInputId){
+    var numInput = document.getElementById(numInputId);
+    if (!numInput) return;
+    var number = numInput.value.trim();
+    if (!number) {
+      showToast('Please enter a document number before saving.', 'warn');
+      return;
+    }
+    var docs = getVaultDocs();
+    docs.push({ type: activeDocType, number: number, revealed: false, savedAt: Date.now() });
+    saveVaultDocs(docs);
+    numInput.value = '';
+    renderVault();
+    showToast(activeDocType + ' saved and redacted by default.', null);
+  }
+
+  var vaultAddSide = document.getElementById('vaultAdd');
+  if (vaultAddSide) vaultAddSide.addEventListener('click', function(){ addVaultDoc('vaultNum'); });
+  var vaultAddMain = document.getElementById('vaultAddMain');
+  if (vaultAddMain) vaultAddMain.addEventListener('click', function(){ addVaultDoc('vaultNumMain'); });
+
+  renderVault();
+
+  /* ================= INITIAL EVENT LOG SEED ================= */
+  logEvent('SYS', 'Om-AI-Master initialized');
+  logEvent('HV-01', 'Diagnostic check passed');
+  logEvent('DR-02', 'Pre-flight check passed');
+
+  if (!speechSupported) {
+    showToast('Voice output (speechSynthesis) is not available in this browser. Chat will still work normally.', 'warn');
+  }
+
 })();
 </script>
 </body>
