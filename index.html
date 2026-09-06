@@ -137,8 +137,14 @@ body {
   border-radius: var(--radius-sm); padding: 8px 12px; color: #fff; font-size: 13px; outline: none;
 }
 .msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 12.5px; margin-bottom: 10px; line-height: 1.5; }
-.msg-bubble.ai { background: rgba(15, 20, 50, 0.9); border: 1px solid var(--border-gold); align-self: flex-start; }
+.msg-bubble.ai { background: rgba(15, 20, 50, 0.9); border: 1px solid var(--border-gold); align-self: flex-start; display: flex; flex-direction: column; align-items: flex-start; }
 .msg-bubble.user { background: #1a3366; border: 1px solid var(--border-cyan); align-self: flex-end; }
+.msg-bubble .bubble-text { white-space: pre-wrap; margin-top: 6px; }
+.audio-button {
+  margin-top: 8px; padding: 6px 10px; background: rgba(0,243,255,0.06); border: 1px solid var(--border-cyan);
+  color: var(--cyber-cyan); border-radius: 8px; font-size: 12px; cursor: pointer; font-family: var(--font-mono);
+}
+.audio-button:hover { background: var(--cyber-cyan); color: #03030c; }
 #toast {
   position: fixed; bottom: 20px; right: 20px; z-index: 999;
   background: #0c102a; border: 1px solid var(--gold-pure); padding: 12px 18px;
@@ -238,10 +244,10 @@ body {
         <p style="color: var(--text-secondary); margin-top: 4px;">Marwari-Gujarati Cashflow Intelligence × Astrological High-Alpha Timing</p>
       </div>
       <div class="grid-4">
-        <div class="card"><div style="color: var(--text-muted);">BTC/USDT</div><div class="metric-value" id="btc-val">$91,420.00</div><div class="metric-sub"><span>INR: ₹76.8L</span><span style="color: var(--cyber-emerald);">+3.42%</span></div></div>
-        <div class="card"><div style="color: var(--text-muted);">ETH/USDT</div><div class="metric-value">$3,340.50</div><div class="metric-sub"><span>INR: ₹2.80L</span><span style="color: var(--cyber-emerald);">+4.18%</span></div></div>
-        <div class="card"><div style="color: var(--text-muted);">SOL/USDT</div><div class="metric-value">$214.30</div><div class="metric-sub"><span>INR: ₹18,001</span><span style="color: var(--cyber-emerald);">+7.82%</span></div></div>
-        <div class="card"><div style="color: var(--text-muted);">USDT/INR P2P</div><div class="metric-value" style="color: var(--gold-pure);">₹ 90.20</div><div class="metric-sub"><span>Spread: +2.15%</span><span style="color: var(--cyber-emerald);">Arb Active</span></div></div>
+        <div class="card"><div style="color: var(--text-muted);">BTC/USDT</div><div class="metric-value" id="btc-val">$91,420.00</div><div class="metric-sub"><span>INR: ₹76.8L</span><span style[...]
+        <div class="card"><div style="color: var(--text-muted);">ETH/USDT</div><div class="metric-value">$3,340.50</div><div class="metric-sub"><span>INR: ₹2.80L</span><span style="color: var(-[...]
+        <div class="card"><div style="color: var(--text-muted);">SOL/USDT</div><div class="metric-value">$214.30</div><div class="metric-sub"><span>INR: ₹18,001</span><span style="color: var(--[...]
+        <div class="card"><div style="color: var(--text-muted);">USDT/INR P2P</div><div class="metric-value" style="color: var(--gold-pure);">₹ 90.20</div><div class="metric-sub"><span>Spread: [...]
       </div>
       <div class="card">
         <h3 style="color: var(--gold-pure); margin-bottom: 10px;">Marwari Arbitrage & P2P Scalping Sniper</h3>
@@ -311,7 +317,7 @@ body {
             <input type="text" id="payout-name" class="form-control" value="Jay Solanki (Primary Merchant)">
             <input type="text" id="payout-vpa" class="form-control" value="jaysolanki@okaxis">
             <input type="number" id="payout-amt" class="form-control" value="50000">
-            <button class="btn-tactical" style="background: rgba(0,255,136,0.15); color: var(--cyber-emerald); border-color: rgba(0,255,136,0.4);" onclick="OmPayouts.dispatch()">💸 Authorize & Settle via IMPS / UPI</button>
+            <button class="btn-tactical" style="background: rgba(0,255,136,0.15); color: var(--cyber-emerald); border-color: rgba(0,255,136,0.4);" onclick="OmPayouts.dispatch()">💸 Authorize & [...]
           </div>
         </div>
         <div class="card" style="text-align: center;">
@@ -364,7 +370,7 @@ body {
         <p style="color: var(--text-secondary); margin-top: 4px;">Transmit Om-AI telemetry logs directly to your Discord server.</p>
         <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px; max-width: 500px;">
           <input type="text" id="discord-webhook-url" class="form-control" placeholder="https://discord.com/api/webhooks/...">
-          <button class="btn-tactical" style="background: rgba(88,101,242,0.2); border-color: #5865F2; color: #9ea7fc;" onclick="OmDiscord.sendTest()">🚀 Transmit Telemetry Pulse to Discord</button>
+          <button class="btn-tactical" style="background: rgba(88,101,242,0.2); border-color: #5865F2; color: #9ea7fc;" onclick="OmDiscord.sendTest()">🚀 Transmit Telemetry Pulse to Discord</bu[...]
         </div>
       </div>
     </section>
@@ -404,7 +410,7 @@ const OmAudio = {
     window.speechSynthesis.speak(u);
   },
   speakGreeting() {
-    this.speak("મેં ઓમ છું, બોલો કયો હુકમ છે જયભાઈ? 400 ટ્રિલિયન સ્વોર્મ સિસ્ટમ સંપૂર્ણ સક્રિય છે.", 'gu-IN');
+    this.speak("મેં ઓમ છું, બોલો કયો હુકમ છે જયભાઈ? 400 ટ્રિલિયન સ્વોર્મ સિસ્ટમ સંપૂર્ણ રીતે સક્રિય છે.");
   }
 };
 
@@ -460,7 +466,7 @@ const OmSwarm = {
     this.render();
     OmLedger.add("Swarm Arbitrage Execution", profit, "INCOME");
     OmToast("Arbitrage Executed: +₹" + profit.toLocaleString('en-IN'), "emerald");
-    OmAudio.speak("આર્બિટ્રેજ સફળતાપૂર્વક પૂર્ણ થયું છે. રૂપિયા " + profit + " નો ચોખ્ખો નફો જમા થયો છે.", 'gu-IN');
+    OmAudio.speak("આર્બિટ્રેજ સફળતાપૂર્વક પૂર્ણ થયું છે. રૂપિયા " + profit + " નો ચોક્કસ નફો મળ્યો છે.", 'gu-IN');
   },
   deployWebAssets() {
     OmToast("50 Programmatic Web Assets Deployed to Edge CDN!", "cyan");
@@ -557,9 +563,9 @@ const OmChat = {
     input.value = "";
     this.addMsg(txt, 'user');
     setTimeout(() => {
-      let reply = `મેં ઓમ છું, બોલો કયો હુકમ છે જયભાઈ? તમારો આદેશ "${txt}" સ્વીકાર્ય છે. 400 ટ્રિલિયન સ્વોર્મ સિસ્ટમ આ કાર્ય માટે સક્રિય છે.`;
+      let reply = `મેં ઓમ છું, બોલો કયો હુકમ છે જયભાઈ? તમારો આદેશ "${txt}" સ્વીકાર્ય છે. 400 ટ્રિલીયન સ્વોર્મ પ્લાનને લાગુ કરવામાં આવશે.`;
       if (txt.toLowerCase().includes('status') || txt.toLowerCase().includes('નફો')) {
-        reply = "જયભાઈ, ગલ્લો ૧૪.૮૮ કરોડ વ્હાઇટ કેપિટલ સાથે છલકાઈ રહ્યો છે અને આજનો નફો ૪.૩૮ લાખ છે!";
+        reply = "જયભાઈ, ગલ્લો ૧૪.૮૮ કરોડ વ્હાઇટ કેપિટલ સાથે છલકાઈ રહ્યો છે અને આજનો નફો ₹4,38,720 સુધી પહોંચ્યો છે.";
       }
       this.addMsg(reply, 'ai');
       OmAudio.speak(reply, 'gu-IN');
@@ -569,7 +575,32 @@ const OmChat = {
     const box = document.getElementById('chat-box');
     const div = document.createElement('div');
     div.className = `msg-bubble ${sender}`;
-    div.innerHTML = `<strong>${sender==='user'?'JAY SOLANKI':'OM AI'}:</strong> ${text}`;
+
+    // Header
+    const header = document.createElement('div');
+    header.innerHTML = `<strong>${sender==='user'?'JAY SOLANKI':'OM AI'}:</strong>`;
+    div.appendChild(header);
+
+    // Message text
+    const content = document.createElement('div');
+    content.className = 'bubble-text';
+    content.textContent = text;
+    div.appendChild(content);
+
+    // If OM AI (ai) — append a small audio button that reads the message aloud (gu-IN)
+    if (sender === 'ai') {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'audio-button';
+      btn.textContent = '🔊 ઑડિયો સાંભળો';
+      btn.setAttribute('aria-label', 'Play audio in Gujarati');
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        OmAudio.speak(text, 'gu-IN');
+      };
+      div.appendChild(btn);
+    }
+
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   },
